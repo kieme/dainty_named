@@ -79,6 +79,23 @@ inline void print(t_ix pos, t_n n, const T& arr) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+enum t_vlanid_tag_ { };
+using t_vlanid_ = named::t_uint16;
+struct t_validate_vlanid_ {
+  static constexpr t_vlanid_ check(t_vlanid_ value) {
+    if (value < 1 || value > 4089)
+      throw std::range_error("vlanid range error");
+    return value;
+  }
+};
+using t_vlanid=named::t_explicit<t_vlanid_, t_vlanid_tag_, t_validate_vlanid_>;
+
+constexpr t_vlanid operator"" _vlanid(named::t_ullong value) {
+  return t_vlanid(value);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 int main() {
   set_point(1,2);
   set_point(t_xaxis(1), t_yaxis(2));
@@ -98,6 +115,10 @@ int main() {
   print(t_ix{0}, three, vect);
 
   t_ix ix = to_ix(three);
+
+  constexpr auto vlan500{500_vlanid};
+
+  std::cout << get(5001_vlanid) << std::endl;
 
   return 0;
 }

@@ -184,62 +184,67 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  template<class, class> class t_explicit;
-  template<class T, class TAG>           T& set(t_explicit<T, TAG>&);
-  template<class T, class TAG> constexpr T  get(t_explicit<T, TAG>);
+  template<class, class, class> class t_explicit;
+  template<class T, class TAG, class V> constexpr T get(t_explicit<T, TAG, V>);
 
   template<class T, class TAG>
+  struct t_validate_ { static constexpr T check(T t) { return t; } };
+
+  template<class T, class TAG, class V = t_validate_<T, TAG> >
   class t_explicit {
   public:
-    using t_value = typename t_supported_strong_<T>::t_type_;
-    using t_tag   = TAG;
+    using t_value    = typename t_supported_strong_<T>::t_type_;
+    using t_tag      = TAG;
+    using t_validate = V;
 
-    constexpr explicit t_explicit(t_value value) : value_(value) { }
+    constexpr explicit t_explicit(t_value value) : value_(V::check(value)) { }
     t_explicit() = delete;                              // for clarity
     t_explicit(const t_explicit&) = default;            // for clarity
     t_explicit& operator=(const t_explicit&) = default; // for clarity
 
   private:
-    template<class U, class TAG1> friend           U& set(t_explicit<U, TAG1>&);
-    template<class U, class TAG1> friend constexpr U  get(t_explicit<U, TAG1>);
+    template<class T1, class TAG1, class V1>
+    friend constexpr T1 get(t_explicit<T1, TAG1, V1>);
     t_value value_;
   };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  template<class T, class TAG>
-  inline
-  T& set(t_explicit<T, TAG>& value) { return value.value_; }
-
-  template<class T, class TAG>
+  template<class T, class TAG, class V>
   constexpr
-  T get(t_explicit<T, TAG> value)   { return value.value_; }
+  T get(t_explicit<T, TAG, V> value) { return value.value_; }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  template<class> struct t_explicit_helper_;
+  template<class> struct t_is_explicit_;
 
-  template<class T, class TAG>
-  struct t_explicit_helper_<t_explicit<T, TAG>> {
-     template<typename TAG1> using t_src_ = t_explicit<T, TAG1>;
+  template<class T, class TAG, class V>
+  struct t_is_explicit_<t_explicit<T, TAG, V>> {
+    using t_result_ = t_explicit<T, TAG, V>;
   };
 
-  template<class E, class TAG1>
+  template<class E, class T, class TAG, class V>
   constexpr
-  E transform(typename t_explicit_helper_<E>::template t_src_<TAG1> src) {
-    return E{get(src)};
+  E transform(t_explicit<T, TAG, V> src) {
+    return typename t_is_explicit_<E>::t_result_{get(src)};
   }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  enum t_n_   {};
-  using t_n   = named::t_explicit<named::t_uint32, t_n_>; // n, number
-  enum t_ix_  {};
-  using t_ix  = named::t_explicit<t_n::t_value,  t_ix_>;  // general index
-  enum t_bix_ {};
-  using t_bix = named::t_explicit<t_ix::t_value, t_bix_>; // begin index
-  enum t_eix_ {};
-  using t_eix = named::t_explicit<t_ix::t_value, t_eix_>; // end index
+  enum t_n_tag_  {};
+  enum t_ix_tag_ {};
+  enum t_bix_tag_ {};
+  enum t_eix_tag_ {};
+
+  using t_n_   = named::t_uint32;
+  using t_ix_  = t_n_;
+  using t_bix_ = t_ix_;
+  using t_eix_ = t_ix_;
+
+  using t_n   = named::t_explicit<t_n_,  t_n_tag_>;   // n, number
+  using t_ix  = named::t_explicit<t_ix_, t_ix_tag_>;  // general index
+  using t_bix = named::t_explicit<t_ix_, t_bix_tag_>; // begin index
+  using t_eix = named::t_explicit<t_ix_, t_eix_tag_>; // end index
 
   constexpr t_ix  to_ix (t_n  n)  { return transform<t_ix> (n);  }
   constexpr t_n   to_n  (t_ix ix) { return transform<t_n>  (ix); }
