@@ -79,7 +79,7 @@
 //    t_xpoint x(-1);              // nok
 //    t_xpoint x{-1)}              // nok
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace dainty
 {
@@ -98,6 +98,10 @@ namespace named
   using t_ullong       = unsigned long long int;
   using t_double       = double;
   using t_void         = void;
+
+  using p_void         = void*;
+  using p_cvoid        = const void*;
+  using p_cstr         = const char*;
 
   using t_int8         = std::int8_t;
   using t_int16        = std::int16_t;
@@ -241,6 +245,11 @@ namespace named
   constexpr t_n   to_n  (t_ix ix) { return transform<t_n>  (ix); }
   constexpr t_bix to_bix(t_ix ix) { return transform<t_bix>(ix); }
   constexpr t_eix to_eix(t_ix ix) { return transform<t_eix>(ix); }
+
+  constexpr t_ix  operator"" _ix (t_ullong ix) { return t_ix(ix);  }
+  constexpr t_bix operator"" _bix(t_ullong ix) { return t_bix(ix); }
+  constexpr t_eix operator"" _eix(t_ullong ix) { return t_eix(ix); }
+  constexpr t_n   operator"" _n  (t_ullong n)  { return t_n(n);    }
 
 ///////////////////////////////////////////////////////////////////////////////
 }
