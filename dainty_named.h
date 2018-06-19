@@ -257,20 +257,30 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  enum t_n_tag_  {};
-  enum t_ix_tag_ {};
-  enum t_bix_tag_ {};
-  enum t_eix_tag_ {};
+  enum t_n_tag_        {};
+  enum t_ix_tag_       {};
+  enum t_bix_tag_      {};
+  enum t_eix_tag_      {};
+  enum t_validity_tag_ {};
 
-  using t_n_   = named::t_uint32;
-  using t_ix_  = t_n_;
-  using t_bix_ = t_ix_;
-  using t_eix_ = t_ix_;
+  using t_n_        = named::t_uint32;
+  using t_ix_       = t_n_;
+  using t_bix_      = t_ix_;
+  using t_eix_      = t_ix_;
+  using t_validity_ = t_bool;
 
-  using t_n   = named::t_explicit<t_n_,  t_n_tag_>;   // n, number
-  using t_ix  = named::t_explicit<t_ix_, t_ix_tag_>;  // general index
-  using t_bix = named::t_explicit<t_ix_, t_bix_tag_>; // begin index
-  using t_eix = named::t_explicit<t_ix_, t_eix_tag_>; // end index
+  using t_n        = named::t_explicit<t_n_,  t_n_tag_>;   // n, number
+  using t_ix       = named::t_explicit<t_ix_, t_ix_tag_>;  // general index
+  using t_bix      = named::t_explicit<t_ix_, t_bix_tag_>; // begin index
+  using t_eix      = named::t_explicit<t_ix_, t_eix_tag_>; // end index
+  using t_validity = named::t_explicit<t_validity_, t_validity_tag_>;
+
+///////////////////////////////////////////////////////////////////////////////
+
+  constexpr t_validity   VALID{true};
+  constexpr t_validity INVALID{false};
+
+///////////////////////////////////////////////////////////////////////////////
 
   constexpr t_ix  to_ix (t_n  n)  { return transform<t_ix> (n);  }
   constexpr t_n   to_n  (t_ix ix) { return transform<t_n>  (ix); }
@@ -281,6 +291,10 @@ namespace named
   constexpr t_bix operator"" _bix(t_ullong ix) { return t_bix(ix); }
   constexpr t_eix operator"" _eix(t_ullong ix) { return t_eix(ix); }
   constexpr t_n   operator"" _n  (t_ullong n)  { return t_n(n);    }
+
+  constexpr t_bool operator==(const t_validity& lh, const t_validity& rh) {
+    return get(lh) == get(rh);
+  }
 
 ///////////////////////////////////////////////////////////////////////////////
 }
