@@ -38,38 +38,43 @@
 //
 //   naming convention:
 //
-//     01. functions, method names must be verbs.
-//     02. classes, struct, types names must be nouns.
-//     03. specialization of named names & identifier are prefixed.
-//     04. types must be prefixed with t_.
-//         (avoid conflict with std:: convention).
-//     05. literal values should be prefixed with v_.
-//     06. constant global variable values must be prefixed with s_.
-//     07. pointer definitions must be prefixed p_.
-//     08. internal functions, methods, variables, types must have an
-//         postfix _. API users should never use these.
-//     09. when using <named::> builtin types on interfaces, use
-//         specializations of t_explicit, to assign purpose to a type.
-//     10. use printable lowercase characters that are c++ identifiers.
-//     11. use '_' within long names to improve readability.
-//     12. use <named::> builtin types instead of <std::>.
-//     13. use qualified names or "using " when working with <named::> types.
-//     14. prefix a const "type" name with c but not the parameter itself.
-//           e.g. t_id id;  -> non-const id.
+//     N01. functions, method names must be verbs.
+//     N02. classes, struct, types names must be nouns.
+//     N03. literal and constant values should be written in capital letters.
+//     N04. specialization of type named names & identifier are prefixed.
+//     N05. types must be prefixed with t_.
+//          (avoid conflict with std:: convention).
+//     N06. pointer definitions must be prefixed p_.
+//     N07. internal functions, methods, variables, types must have an
+//          postfix _. API users should never use these.
+//     N08. when using <dainty::named> builtin types on interfaces, use
+//          specializations of t_explicit, to assign purpose to a type.
+//     N09. use printable lowercase characters that are c++ identifiers.
+//     N10. use '_' within long names to improve readability.
+//     N11. use <dainty::named> builtin types instead of <std>.
+//     N12. use qualified names or "using " when using <dainty::named>.
+//     N13. prefix a const "type" name with c but not the parameter itself.
+//           e.g. t_id  id;  -> non-const id.
 //                t_cid id; -> const id. but const is not identifyable with
 //                             the variable name.
-//     15. when writing classes/structs using the following naming convention
-//         for function parameters, data memebers and types.
-//         // -> t_value, value, value_
-//         class t_class {
-//         public:
-//           typedef ... t_value;
-//           void set_value(const t_value& value) {
-//             value_ = value;
-//           }
-//         private:
-//           t_value value;
-//         };
+//     N14. when writing classes/structs using the following naming convention
+//          for function parameters, data memebers and types.
+//          // -> t_param, param, param_
+//          e.g class t_class {
+//              public:
+//                using t_param = ... ;
+//                void set(const t_param& param) {
+//                  param_ = param;
+//                }
+//              private:
+//                t_param param_;
+//              };
+//
+//   specialization of t_explicit for interface use:
+//
+//      Z01: use type t_ix that is intended to index into something.
+//      Z02: use type t_n that is intended to represent a number of elements.
+//      Z03: use t_validity to express if something is valid.
 //
 //
 // should set be allowed. its meant only to transfer data through an interface.
@@ -106,6 +111,9 @@
 //    t_xpoint x{-1)}              // nok
 
 #include <cstdint>
+
+#define OK  dainty::named::VALID
+#define NOK dainty::named::INVALID
 
 namespace dainty
 {
@@ -263,17 +271,17 @@ namespace named
   enum t_eix_tag_      {};
   enum t_validity_tag_ {};
 
-  using t_n_        = named::t_uint32;
+  using t_n_        = t_uint32;
   using t_ix_       = t_n_;
   using t_bix_      = t_ix_;
   using t_eix_      = t_ix_;
   using t_validity_ = t_bool;
 
-  using t_n        = named::t_explicit<t_n_,  t_n_tag_>;   // n, number
-  using t_ix       = named::t_explicit<t_ix_, t_ix_tag_>;  // general index
-  using t_bix      = named::t_explicit<t_ix_, t_bix_tag_>; // begin index
-  using t_eix      = named::t_explicit<t_ix_, t_eix_tag_>; // end index
-  using t_validity = named::t_explicit<t_validity_, t_validity_tag_>;
+  using t_n        = t_explicit<t_n_,  t_n_tag_>;   // n, number
+  using t_ix       = t_explicit<t_ix_, t_ix_tag_>;  // general index
+  using t_bix      = t_explicit<t_ix_, t_bix_tag_>; // begin index
+  using t_eix      = t_explicit<t_ix_, t_eix_tag_>; // end index
+  using t_validity = t_explicit<t_validity_, t_validity_tag_>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
