@@ -219,7 +219,10 @@ namespace named
 ///////////////////////////////////////////////////////////////////////////////
 
   template<class, class, class> class t_explicit;
-  template<class T, class TAG, class V> constexpr T get(t_explicit<T, TAG, V>);
+  template<class T, class TAG, class V>
+  constexpr T  get(t_explicit<T, TAG, V>);
+  template<class T, class TAG, class V>
+  constexpr T& set(t_explicit<T, TAG, V>&);
 
   template<class T, class TAG>
   struct t_validate_ { static constexpr T check(T t) { return t; } };
@@ -238,7 +241,9 @@ namespace named
 
   private:
     template<class T1, class TAG1, class V1>
-    friend constexpr T1 get(t_explicit<T1, TAG1, V1>);
+    friend constexpr T1  get(t_explicit<T1, TAG1, V1>);
+    template<class T1, class TAG1, class V1>
+    friend constexpr T1& set(t_explicit<T1, TAG1, V1>&);
     t_value value_;
   };
 
@@ -246,7 +251,11 @@ namespace named
 
   template<class T, class TAG, class V>
   constexpr
-  T get(t_explicit<T, TAG, V> value) { return value.value_; }
+  T  get(t_explicit<T, TAG, V> value)  { return value.value_; }
+
+  template<class T, class TAG, class V>
+  constexpr
+  T& set(t_explicit<T, TAG, V>& value) { return value.value_; }
 
 ///////////////////////////////////////////////////////////////////////////////
 

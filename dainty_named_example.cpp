@@ -146,5 +146,8 @@ int main() {
 
   std::cout << get(5001_vlanid) << std::endl;
 
+  t_ix uix{5};
+  set(uix) = 10;
+
   return 0;
 }
