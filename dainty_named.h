@@ -76,6 +76,16 @@
 //      Z02: use type t_n that is intended to represent a number of elements.
 //      Z03: use t_validity to express if something is valid.
 //
+//   file naming convention:
+//
+//      F01: dainty_<namespace>.h of a namespace located withint dainty.
+//      F02: dainty_<namespace>_<purpose>.h a functionality within namespace.
+//      F03: the cpp files names are the same as the associated header files.
+//           dainty_oops.h and dainty_oops.cpp
+//      F04: example cpp files use the name of the functionality.
+//           dainty_oops.cpp then dainty_oops_example<n>.cpp
+//      F05: test cpp files use the name of the functionality.
+//           dainty_oops.cpp then dainty_oops_test<n>.cpp
 //
 // should set be allowed. its meant only to transfer data through an interface.
 //
@@ -135,7 +145,6 @@ namespace named
 
   using p_void         = void*;
   using p_cvoid        = const void*;
-  using p_cstr         = const char*;
 
   using t_int8         = std::int8_t;
   using t_int16        = std::int16_t;
@@ -210,7 +219,22 @@ namespace named
 
   template<typename T>
   struct t_supported_strong_<T*> {
-    typedef typename t_supported_strong_<T>::type_t_* t_type_;
+    typedef typename t_supported_strong_<T>::t_type_* t_type_;
+  };
+
+  template<typename T>
+  struct t_supported_strong_<const T*> {
+    typedef const typename t_supported_strong_<T>::t_type_* t_type_;
+  };
+
+  template<typename T>
+  struct t_supported_strong_<T* const> {
+    typedef typename t_supported_strong_<T>::t_type_* const t_type_;
+  };
+
+  template<typename T>
+  struct t_supported_strong_<const T* const> {
+    typedef const typename t_supported_strong_<T>::t_type_* const t_type_;
   };
 
   template<typename T>
@@ -279,18 +303,21 @@ namespace named
   enum t_bix_tag_      {};
   enum t_eix_tag_      {};
   enum t_validity_tag_ {};
+  enum t_cstr_tag_     {};
 
   using t_n_        = t_uint32;
   using t_ix_       = t_n_;
   using t_bix_      = t_ix_;
   using t_eix_      = t_ix_;
   using t_validity_ = t_bool;
+  using p_cstr_     = const char*;
 
   using t_n        = t_explicit<t_n_,  t_n_tag_>;   // n, number
   using t_ix       = t_explicit<t_ix_, t_ix_tag_>;  // general index
   using t_bix      = t_explicit<t_ix_, t_bix_tag_>; // begin index
   using t_eix      = t_explicit<t_ix_, t_eix_tag_>; // end index
   using t_validity = t_explicit<t_validity_, t_validity_tag_>;
+  using p_cstr     = t_explicit<p_cstr_, t_cstr_tag_>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -312,6 +339,11 @@ namespace named
   constexpr t_bool operator==(const t_validity& lh, const t_validity& rh) {
     return get(lh) == get(rh);
   }
+
+  template<int N>
+  constexpr p_cstr mk_cstr(const char (&cstr)[N]) { return p_cstr{cstr}; }
+
+  constexpr p_cstr mk_cstr(p_cstr_ cstr)          { return p_cstr{cstr}; }
 
 ///////////////////////////////////////////////////////////////////////////////
 }
