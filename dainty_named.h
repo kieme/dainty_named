@@ -45,19 +45,20 @@
 //     N05. types must be prefixed with t_.
 //          (avoid conflict with std:: convention).
 //     N06. pointer definitions must be prefixed p_.
-//     N07. internal functions, methods, variables, types must have an
+//     N07. reference definitions must be prefixed r_.
+//     N08. internal functions, methods, variables, types must have an
 //          postfix _. API users should never use these.
-//     N08. when using <dainty::named> builtin types on interfaces, use
+//     N09. when using <dainty::named> builtin types on interfaces, use
 //          specializations of t_explicit, to assign purpose to a type.
-//     N09. use printable lowercase characters that are c++ identifiers.
-//     N10. use '_' within long names to improve readability.
-//     N11. use <dainty::named> builtin types instead of <std>.
-//     N12. use qualified names or "using " when using <dainty::named>.
-//     N13. prefix a const "type" name with c but not the parameter itself.
-//           e.g. t_id  id;  -> non-const id.
+//     N10. use printable lowercase characters that are c++ identifiers.
+//     N11. use '_' within long names to improve readability.
+//     N12. use <dainty::named> builtin types instead of <std>.
+//     N13. use qualified names or "using " when using <dainty::named>.
+//     N14. prefix a const "type" name with c but not the parameter itself.
+//           e.g. t_id  id; -> non-const id.
 //                t_cid id; -> const id. but const is not identifyable with
 //                             the variable name.
-//     N14. when writing classes/structs using the following naming convention
+//     N15. when writing classes/structs using the following naming convention
 //          for function parameters, data memebers and types.
 //          // -> t_param, param, param_
 //          e.g class t_class {
@@ -69,6 +70,14 @@
 //              private:
 //                t_param param_;
 //              };
+//     N15.1 when a naming conflict exit, prefix a variable with _.
+//           struct t_pair {
+//             t_first  first;
+//             t_second second; // not postfixed with _ because not internal.
+//             t_pair(t_first _first, t_second _second)
+//               : first(_first), second{_second) {
+//             }
+//           };
 //
 //   specialization of t_explicit for interface use:
 //
@@ -342,7 +351,6 @@ namespace named
 
   template<int N>
   constexpr p_cstr mk_cstr(const char (&cstr)[N]) { return p_cstr{cstr}; }
-
   constexpr p_cstr mk_cstr(p_cstr_ cstr)          { return p_cstr{cstr}; }
 
 ///////////////////////////////////////////////////////////////////////////////
