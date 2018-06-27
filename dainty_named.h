@@ -226,6 +226,9 @@ namespace named
   template<>
   struct t_supported_strong_<t_double> { typedef t_double t_type_; };
 
+  template<>
+  struct t_supported_strong_<t_void>   { typedef t_void t_type_; };
+
   template<typename T>
   struct t_supported_strong_<T*> {
     typedef typename t_supported_strong_<T>::t_type_* t_type_;
