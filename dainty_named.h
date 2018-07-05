@@ -188,69 +188,69 @@ namespace named
 ///////////////////////////////////////////////////////////////////////////////
 
   template<typename T>
-  struct t_supported_strong_           { };
+  struct t_support_explicit_           { };
 
   template<>
-  struct t_supported_strong_<t_bool>   { typedef t_bool t_type_; };
+  struct t_support_explicit_<t_bool>   { typedef t_bool t_type_; };
 
   template<>
-  struct t_supported_strong_<t_char>   { typedef t_char t_type_; };
+  struct t_support_explicit_<t_char>   { typedef t_char t_type_; };
 
   template<>
-  struct t_supported_strong_<t_uchar>  { typedef t_uchar t_type_; };
+  struct t_support_explicit_<t_uchar>  { typedef t_uchar t_type_; };
 
   template<>
-  struct t_supported_strong_<t_int>    { typedef t_int t_type_; };
+  struct t_support_explicit_<t_int>    { typedef t_int t_type_; };
 
   template<>
-  struct t_supported_strong_<t_uint>   { typedef t_uint t_type_; };
+  struct t_support_explicit_<t_uint>   { typedef t_uint t_type_; };
 
   template<>
-  struct t_supported_strong_<t_short>  { typedef t_short t_type_; };
+  struct t_support_explicit_<t_short>  { typedef t_short t_type_; };
 
   template<>
-  struct t_supported_strong_<t_ushort> { typedef t_ushort t_type_; };
+  struct t_support_explicit_<t_ushort> { typedef t_ushort t_type_; };
 
   template<>
-  struct t_supported_strong_<t_long>   { typedef t_long t_type_; };
+  struct t_support_explicit_<t_long>   { typedef t_long t_type_; };
 
   template<>
-  struct t_supported_strong_<t_ulong>  { typedef t_ulong t_type_; };
+  struct t_support_explicit_<t_ulong>  { typedef t_ulong t_type_; };
 
   template<>
-  struct t_supported_strong_<t_llong>  { typedef t_llong t_type_; };
+  struct t_support_explicit_<t_llong>  { typedef t_llong t_type_; };
 
   template<>
-  struct t_supported_strong_<t_ullong> { typedef t_ullong t_type_; };
+  struct t_support_explicit_<t_ullong> { typedef t_ullong t_type_; };
 
   template<>
-  struct t_supported_strong_<t_double> { typedef t_double t_type_; };
+  struct t_support_explicit_<t_double> { typedef t_double t_type_; };
 
   template<>
-  struct t_supported_strong_<t_void>   { typedef t_void t_type_; };
+  struct t_support_explicit_<t_void>   { typedef t_void t_type_; };
 
   template<typename T>
-  struct t_supported_strong_<T*> {
-    typedef typename t_supported_strong_<T>::t_type_* t_type_;
+  struct t_support_explicit_<T*> {
+    typedef typename t_support_explicit_<T>::t_type_* t_type_;
   };
 
   template<typename T>
-  struct t_supported_strong_<const T*> {
-    typedef const typename t_supported_strong_<T>::t_type_* t_type_;
+  struct t_support_explicit_<const T*> {
+    typedef const typename t_support_explicit_<T>::t_type_* t_type_;
   };
 
   template<typename T>
-  struct t_supported_strong_<T* const> {
-    typedef typename t_supported_strong_<T>::t_type_* const t_type_;
+  struct t_support_explicit_<T* const> {
+    typedef typename t_support_explicit_<T>::t_type_* const t_type_;
   };
 
   template<typename T>
-  struct t_supported_strong_<const T* const> {
-    typedef const typename t_supported_strong_<T>::t_type_* const t_type_;
+  struct t_support_explicit_<const T* const> {
+    typedef const typename t_support_explicit_<T>::t_type_* const t_type_;
   };
 
   template<typename T>
-  struct t_supported_strong_<T**> { };
+  struct t_support_explicit_<T**> { };
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -266,7 +266,7 @@ namespace named
   template<class T, class TAG, class V = t_validate_<T, TAG> >
   class t_explicit {
   public:
-    using t_value    = typename t_supported_strong_<T>::t_type_;
+    using t_value    = typename t_support_explicit_<T>::t_type_;
     using t_tag      = TAG;
     using t_validate = V;
 
@@ -315,6 +315,7 @@ namespace named
   enum t_bix_tag_      {};
   enum t_eix_tag_      {};
   enum t_validity_tag_ {};
+  enum t_str_tag_      {};
   enum t_cstr_tag_     {};
 
   using t_n_        = t_uint32;
@@ -322,6 +323,7 @@ namespace named
   using t_bix_      = t_ix_;
   using t_eix_      = t_ix_;
   using t_validity_ = t_bool;
+  using p_str_      = char*;
   using p_cstr_     = const char*;
 
   using t_n        = t_explicit<t_n_,  t_n_tag_>;   // n, number
@@ -329,6 +331,7 @@ namespace named
   using t_bix      = t_explicit<t_ix_, t_bix_tag_>; // begin index
   using t_eix      = t_explicit<t_ix_, t_eix_tag_>; // end index
   using t_validity = t_explicit<t_validity_, t_validity_tag_>;
+  using p_str      = t_explicit<p_str_,  t_str_tag_>;
   using p_cstr     = t_explicit<p_cstr_, t_cstr_tag_>;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -351,6 +354,10 @@ namespace named
   constexpr t_bool operator==(const t_validity& lh, const t_validity& rh) {
     return get(lh) == get(rh);
   }
+
+  template<int N>
+  constexpr p_str  mk_str(char (&str)[N])         { return p_str{str};   }
+  constexpr p_str  mk_str(p_str_ str)             { return p_str{str};   }
 
   template<int N>
   constexpr p_cstr mk_cstr(const char (&cstr)[N]) { return p_cstr{cstr}; }
