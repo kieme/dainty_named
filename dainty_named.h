@@ -365,9 +365,7 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  enum t_user_tag_ {};
-
-  template<typename TAG = t_user_tag_>
+  template<typename TAG>
   struct t_user {
     union {
       named::t_int64 id;
