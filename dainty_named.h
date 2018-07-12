@@ -364,6 +364,24 @@ namespace named
   constexpr p_cstr mk_cstr(p_cstr_ cstr)          { return p_cstr{cstr}; }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+  enum t_user_tag_ {};
+
+  template<typename TAG = t_user_tag_>
+  struct t_user {
+    union {
+      named::t_int64 id;
+      named::p_void  ptr;
+      named::p_cvoid cptr;
+    };
+    t_user() : id(0) { }
+    inline t_user(named::t_int64 _id)   : id  (_id)   { }
+    inline t_user(named::p_void  _ptr)  : ptr (_ptr)  { }
+    inline t_user(named::p_cvoid _cptr) : cptr(_cptr) { }
+  };
+
+///////////////////////////////////////////////////////////////////////////////
+
 }
 }
 
