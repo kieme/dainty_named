@@ -378,6 +378,16 @@ namespace named
     inline t_user(named::p_cvoid _cptr) : cptr(_cptr) { }
   };
 
+  template<typename TAG>
+  constexpr t_bool operator==(const t_user<TAG>& lh, const t_user<TAG>& rh) {
+    return lh.id == rh.id;
+  }
+
+  template<typename TAG>
+  constexpr t_bool operator!=(const t_user<TAG>& lh, const t_user<TAG>& rh) {
+    return lh.id != rh.id;
+  }
+
 ///////////////////////////////////////////////////////////////////////////////
 
 }
