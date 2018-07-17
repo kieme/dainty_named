@@ -38,6 +38,10 @@ namespace string
 {
 ////////////////////////////////////////////////////////////////////////////////
 
+  t_n_ calc_chr_(t_n_ chars, t_n_ blks) {
+    return blks*32 + chars + 1;
+  }
+
   p_str_ alloc_  (t_n_ n) {
     return (p_str_)std::malloc(n + 1);
   }
