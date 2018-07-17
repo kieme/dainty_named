@@ -74,10 +74,16 @@ namespace string
   t_n_ fill_   (p_str_, t_n_, r_cblock,         t_overflow_assert);
   t_n_ fill_   (p_str_, t_n_, r_cblock,         t_overflow_truncate);
 
+  p_str_ alloc_  (t_n_);
+  t_void dealloc_(p_cstr_);
+  p_str_ realloc_(p_str_, t_n_);
+
   t_void display_(p_cstr_);
   t_int  compare_(p_cstr_, p_cstr_);
   t_bool match_  (p_cstr_, p_cstr_ pattern);
   t_n_   count_  (t_char,  p_cstr_);
+  t_n_   length_ (p_cstr_);
+  t_n_   length_ (p_cstr_, va_list);
 
 ////////////////////////////////////////////////////////////////////////////////
 

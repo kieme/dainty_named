@@ -27,6 +27,7 @@
 #include <assert.h>
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
 #include "dainty_named_string_impl.h"
 
 namespace dainty
@@ -37,21 +38,31 @@ namespace string
 {
 ////////////////////////////////////////////////////////////////////////////////
 
+  p_str_ alloc_  (t_n_ n) {
+    return (p_str_)std::malloc(n + 1);
+  }
+
+  t_void dealloc_(p_str_ str) {
+    std::free(str);
+  }
+
+  p_str_ realloc_(p_str_ str, t_n_ n) {
+    return (p_str_)std::realloc(str, n + 1);
+  }
+
   t_n_ build_(p_str_ dst, t_n_ max, p_cstr_ format, va_list vars,
               t_overflow_assert) {
-    t_int n = std::vsnprintf(dst, max, format, vars);
-    if (n < 0 && (t_n_)n >= max)
-      assert(0);
+    t_int n = std::vsnprintf(dst, max + 1, format, vars);
+    assert(n > 0 && (t_n_)n <= max);
     return n;
   }
 
   t_n_ build_(p_str_ dst, t_n_ max, p_cstr_ format, va_list vars,
               t_overflow_truncate) {
-    t_int n = std::vsnprintf(dst, max, format, vars);
-    assert(n>=0);
-    if ((t_n_)n >= max)
-      n = max - 1;
-    // dst[nt] = '\0'
+    t_int n = std::vsnprintf(dst, max + 1, format, vars);
+    assert(n>0);
+    if ((t_n_)n > max)
+      n = max;
     return n;
   }
 
@@ -116,6 +127,14 @@ namespace string
 
   t_int compare_(p_cstr_ lh, p_cstr_ rh) {
     return std::strcmp(lh, rh);
+  }
+
+  t_n_ length_(p_cstr_ str) {
+    return std::strlen(str);
+  }
+
+  t_n_ length_(p_cstr_ format, va_list vars) {
+    return std::vsnprintf(NULL, 0, format, vars);
   }
 
   t_bool match_(p_cstr_ str, p_cstr_ pattern) {
