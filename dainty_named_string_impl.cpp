@@ -119,18 +119,21 @@ namespace string
   }
 
   t_bool match_(p_cstr_ str, p_cstr_ pattern) {
-    t_bool wildcarded = false; // a better version - XXX
-    for (; *pattern && *str; ++str) {
-      if (*str == *pattern) {
-        wildcarded = false;
-        ++pattern;
-      } else if (*pattern == '*') {
-        wildcarded = true;
-        ++pattern;
-      } else if (!wildcarded)
+    p_cstr_ l = 0; // XXX not fully correct
+    while (*pattern && *str) {
+             if (*pattern == *str)    ++pattern;
+        else if (*pattern == '*') l = ++pattern;
+        else if (*pattern == '?') {   ++pattern;
+      } else if (l) {
+        if (pattern != l) {
+          pattern = l;
+          continue;
+        }
+      } else
         return false;
+      ++str;
     }
-    return *str ? wildcarded : !*pattern;
+    return *str ? (t_bool)l : !*pattern;
   }
 
   t_n_ count_(t_char c,  p_cstr_ str) {

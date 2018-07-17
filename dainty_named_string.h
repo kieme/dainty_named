@@ -289,14 +289,14 @@ namespace string
   template<class TAG, t_n_ N, class I>
   inline
   t_bool t_string<TAG, N, I>::match(p_cstr pattern) const {
-    return impl_.match(store_, N, get(pattern));
+    return impl_.match(store_, get(pattern));
   }
 
   template<class TAG, t_n_ N, class I>
   template<t_n_ N1>
   inline
   t_bool t_string<TAG, N, I>::match(const t_char (&pattern)[N1]) const {
-    return impl_.match(store_, N, pattern);
+    return impl_.match(store_, pattern);
   }
 
   template<class TAG,  t_n_ N,  class I>
@@ -304,7 +304,7 @@ namespace string
   inline
   t_bool
       t_string<TAG, N, I>::match(const t_string<TAG1, N1, I1>& pattern) const {
-    return impl_.match(store_, N, get(pattern.c_str()));
+    return impl_.match(store_, get(pattern.c_str()));
   }
 
   template<class TAG, t_n_ N, class I>
