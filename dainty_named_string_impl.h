@@ -78,6 +78,7 @@ namespace string
   p_str_ alloc_   (t_n_);
   t_void dealloc_ (p_str_);
   p_str_ realloc_ (p_str_, t_n_);
+  t_bool prepare_ (p_str_&, t_n_, t_n_);
 
   t_void display_ (p_cstr_);
   t_int  compare_ (p_cstr_, p_cstr_);
@@ -94,8 +95,12 @@ namespace string
     using t_char   = named::t_char;
     using r_cblock = string::r_cblock;
 
+    //inline
+    //t_string_impl_() : len_{0} {
+    //}
+
     inline
-    t_string_impl_() : len_{0} {
+    t_string_impl_(t_n_ len) : len_{len} {
     }
 
     inline
@@ -206,7 +211,6 @@ namespace string
         f(str[n]);
     }
 
-  private:
     t_n_ len_ = 0;
   };
 

@@ -390,6 +390,36 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
+  template<class T>
+  constexpr
+  T release(T& t) {
+    T tmp = t;
+    t = 0;
+    return tmp;
+  }
+
+  template<class T>
+  constexpr
+  T* release(T*& t) {
+    T* tmp = t;
+    t = nullptr;
+    return tmp;
+  }
+
+  template<class T, class TAG>
+  constexpr
+  T release(t_explicit<T, TAG>& t) {
+    return release(set(t));
+  }
+
+  template<class TAG>
+  constexpr
+  named::t_int64 release(t_user<TAG>& t) {
+    return release(t.id);
+  }
+
+///////////////////////////////////////////////////////////////////////////////
+
 }
 }
 
