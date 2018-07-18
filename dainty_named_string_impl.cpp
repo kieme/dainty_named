@@ -148,7 +148,11 @@ namespace string
   }
 
   t_n_ length_(p_cstr_ format, va_list vars) {
-    return std::vsnprintf(NULL, 0, format, vars);
+    va_list args;
+    va_copy(args, vars);
+    t_n_ require = std::vsnprintf(NULL, 0, format, args);
+    va_end(args);
+    return require;
   }
 
   t_bool match_(p_cstr_ str, p_cstr_ pattern) {
