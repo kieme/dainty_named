@@ -390,6 +390,13 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
+  constexpr
+  t_bool release(t_bool& t) {
+    t_bool tmp = t;
+    t = false;
+    return tmp;
+  }
+
   template<class T>
   constexpr
   T release(T& t) {
@@ -408,15 +415,11 @@ namespace named
 
   template<class T, class TAG>
   constexpr
-  T release(t_explicit<T, TAG>& t) {
-    return release(set(t));
-  }
+  T release(t_explicit<T, TAG>& t)       { return release(set(t)); }
 
   template<class TAG>
   constexpr
-  named::t_int64 release(t_user<TAG>& t) {
-    return release(t.id);
-  }
+  named::t_int64 release(t_user<TAG>& t) { return release(t.id); }
 
 ///////////////////////////////////////////////////////////////////////////////
 
