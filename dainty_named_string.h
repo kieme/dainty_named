@@ -37,6 +37,10 @@ namespace string
 {
 ////////////////////////////////////////////////////////////////////////////////
 
+  enum t_fmt { FMT };
+
+////////////////////////////////////////////////////////////////////////////////
+
   template<class TAG, t_n_ N = 0, class I = t_overflow_assert>
   class t_string {
     using t_impl_ = t_string_impl_<I>;
@@ -49,7 +53,7 @@ namespace string
     t_string();
     t_string(p_cstr);
     t_string(r_cblock);
-    t_string(p_cstr_ fmt, ...) __attribute__((format(printf, 2, 3)));
+    t_string(t_fmt, p_cstr_, ...) __attribute__((format(printf, 3, 4)));
     t_string(const t_string&);
 
     template<t_n_ N1>
@@ -65,13 +69,13 @@ namespace string
     template<t_n_ N1, class I1>
     t_string& operator=(const t_string<TAG, N1, I1>&);
 
-    t_string& assign(p_cstr_ fmt, ...) __attribute__((format(printf, 2, 3)));
+    t_string& assign(t_fmt, p_cstr_, ...) __attribute__((format(printf, 3, 4)));
     template<class TAG1, t_n_ N1, class I1>
     t_string& assign(const t_string<TAG1, N1, I1>&);
 
     t_string& append(p_cstr);
     t_string& append(r_cblock);
-    t_string& append(p_cstr_ fmt, ...) __attribute__((format(printf, 2, 3)));
+    t_string& append(t_fmt, p_cstr_, ...) __attribute__((format(printf, 3, 4)));
     template<t_n_ N1> t_string& append(const t_char (&)[N1]);
     template<class TAG1, t_n_ N1, class I1>
     t_string& append(const t_string<TAG1, N1, I1>&);
@@ -121,7 +125,7 @@ namespace string
      t_string(t_n max, t_n blks = t_n{0});
      t_string(p_cstr);
      t_string(r_cblock);
-     t_string(p_cstr_ fmt, ...) __attribute__((format(printf, 2, 3)));
+     t_string(t_fmt, p_cstr_, ...) __attribute__((format(printf, 3, 4)));
      t_string(const t_string&);
 
      template<class I1>
@@ -143,13 +147,13 @@ namespace string
     template<class I1>
     t_string& operator=(t_string<TAG, 0, I1>&&);
 
-    t_string& assign(p_cstr_ fmt, ...) __attribute__((format(printf, 2, 3)));
+    t_string& assign(t_fmt, p_cstr_, ...) __attribute__((format(printf, 3, 4)));
     template<class TAG1, t_n_ N1, class I1>
     t_string& assign(const t_string<TAG1, N1, I1>&);
 
     t_string& append(p_cstr);
     t_string& append(r_cblock);
-    t_string& append(p_cstr_ fmt, ...) __attribute__((format(printf, 2, 3)));
+    t_string& append(t_fmt, p_cstr_, ...) __attribute__((format(printf, 3, 4)));
     template<t_n_ N1> t_string& append(const t_char (&)[N1]);
     template<class TAG1, t_n_ N1, class I1>
     t_string& append(const t_string<TAG1, N1, I1>&);
@@ -209,7 +213,7 @@ namespace string
 
   template<class TAG, t_n_ N, class I>
   inline
-  t_string<TAG, N, I>::t_string(p_cstr_ fmt, ...) : impl_{0U} {
+  t_string<TAG, N, I>::t_string(t_fmt, p_cstr_ fmt, ...) : impl_{0U} {
     va_list vars;
     va_start(vars, fmt);
     impl_.va_assign(store_, N, fmt, vars);
@@ -277,7 +281,7 @@ namespace string
 
   template<class TAG, t_n_ N, class I>
   inline
-  t_string<TAG, N, I>& t_string<TAG, N, I>::assign(p_cstr_ fmt, ...) {
+  t_string<TAG, N, I>& t_string<TAG, N, I>::assign(t_fmt, p_cstr_ fmt, ...) {
     va_list vars;
     va_start(vars, fmt);
     impl_.va_assign(store_, N, fmt, vars);
@@ -310,7 +314,7 @@ namespace string
 
   template<class TAG, t_n_ N, class I>
   inline
-  t_string<TAG, N, I>& t_string<TAG, N, I>::append(p_cstr_ fmt, ...) {
+  t_string<TAG, N, I>& t_string<TAG, N, I>::append(t_fmt, p_cstr_ fmt, ...) {
     va_list vars;
     va_start(vars, fmt);
     impl_.va_append(store_, N, fmt, vars);
@@ -471,7 +475,7 @@ namespace string
 
   template<class TAG, class I>
   inline
-  t_string<TAG, 0, I>::t_string(p_cstr_ fmt, ...) : impl_{0U} {
+  t_string<TAG, 0, I>::t_string(t_fmt, p_cstr_ fmt, ...) : impl_{0U} {
     va_list vars;
     va_start(vars, fmt);
     va_assign(fmt, vars);
@@ -594,7 +598,7 @@ namespace string
 
   template<class TAG, class I>
   inline
-  t_string<TAG, 0, I>& t_string<TAG, 0, I>::assign(p_cstr_ fmt, ...) {
+  t_string<TAG, 0, I>& t_string<TAG, 0, I>::assign(t_fmt, p_cstr_ fmt, ...) {
     va_list vars;
     va_start(vars, fmt);
     va_assign(fmt, vars);
@@ -630,7 +634,7 @@ namespace string
 
   template<class TAG, class I>
   inline
-  t_string<TAG, 0, I>& t_string<TAG, 0, I>::append(p_cstr_ fmt, ...) {
+  t_string<TAG, 0, I>& t_string<TAG, 0, I>::append(t_fmt, p_cstr_ fmt, ...) {
     va_list vars;
     va_start(vars, fmt);
     va_append(fmt, vars);

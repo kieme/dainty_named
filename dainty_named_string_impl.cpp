@@ -38,12 +38,22 @@ namespace string
 {
 ////////////////////////////////////////////////////////////////////////////////
 
+  inline
+  t_n_ multiple_of_64_(t_n_ n) {
+    if (n%64)
+      n = (n - n%64) + 64;
+    return n;
+  }
+
   t_n_ calc_chr_(t_n_ chars, t_n_ blks) {
-    return blks*32 + chars + 1;
+    return blks*64 + multiple_of_64_(chars + 1);
   }
 
   p_str_ alloc_  (t_n_ n) {
-    return (p_str_)std::malloc(n + 1);
+    p_str_ str = (p_str_)std::malloc(n + 1);
+    if (!str)
+      assert(0); // out of memory - invalid strings won't exist!
+    return str;
   }
 
   t_void dealloc_(p_str_ str) {
