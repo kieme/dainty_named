@@ -523,7 +523,8 @@ namespace string
   inline
   t_void t_string<TAG, 0, I>::adjust_(t_n_ need) {
     if (need > max_) {
-      dealloc_(store_);
+      if (store_)
+        dealloc_(store_);
       max_   = calc_chr_(need, blks_);
       store_ = alloc_(max_);
     }
