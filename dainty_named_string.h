@@ -493,7 +493,7 @@ namespace string
   template<t_n_ N1>
   inline
   t_string<TAG, 0, I>::t_string(const t_char (&str)[N1])
-    : max_{N1}, blks_{0}, store_{alloc_(max_)}, impl_{store_, max_, str} {
+    : max_{N1-1}, blks_{0}, store_{alloc_(max_)}, impl_{store_, max_, str} {
   }
 
   template<class TAG, class I>
@@ -569,7 +569,7 @@ namespace string
   inline
   t_string<TAG, 0, I>&
       t_string<TAG, 0, I>::operator=(const t_char (&str)[N1]) {
-    adjust_(N1);
+    adjust_(N1-1);
     impl_.assign(store_, max_, str);
     return *this;
   }
@@ -647,7 +647,7 @@ namespace string
   template<t_n_ N1>
   inline
   t_string<TAG, 0, I>& t_string<TAG, 0, I>::append(const t_char (&str)[N1]) {
-    readjust_(N1);
+    readjust_(N1-1);
     impl_.append(store_, max_, str);
     return *this;
   }
@@ -666,8 +666,16 @@ namespace string
   inline
   t_string<TAG, 0, I>& t_string<TAG, 0, I>::va_assign(p_cstr_ fmt,
                                                       va_list vars) {
-    adjust_(length_(fmt, vars));
-    impl_.va_assign(store_, max_, fmt, vars);
+#if 1
+  adjust_(length_(fmt, vars));
+  impl_.va_assign(store_, max_, fmt, vars);
+#else
+    t_n_ need = impl_.va_assign_(store_, max_, fmt, vars);
+    if (need) {
+      adjust_(need);
+      impl_.va_assign(store_, max_, fmt, vars);
+    }
+#endif
     return *this;
   }
 
@@ -675,8 +683,16 @@ namespace string
   inline
   t_string<TAG, 0, I>& t_string<TAG, 0, I>::va_append(p_cstr_ fmt,
                                                       va_list vars) {
-    readjust_(length_(fmt, vars));
-    impl_.va_append(store_, max_, fmt, vars);
+#if 2
+  readjust_(length_(fmt, vars));
+  impl_.va_append(store_, max_, fmt, vars);
+#else
+    t_n_ need = impl_.va_append_(store_, max_, fmt, vars);
+    if (need) {
+      readjust_(need);
+      impl_.va_append(store_, max_, fmt, vars);
+    }
+#endif
     return *this;
   }
 

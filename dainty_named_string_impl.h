@@ -65,6 +65,7 @@ namespace string
 
 ////////////////////////////////////////////////////////////////////////////////
 
+  t_n_ build_  (p_str_, t_n_, p_cstr_, va_list);
   t_n_ build_  (p_str_, t_n_, p_cstr_, va_list, t_overflow_assert);
   t_n_ build_  (p_str_, t_n_, p_cstr_, va_list, t_overflow_truncate);
   t_n_ copy_   (p_str_, t_n_, p_cstr_, t_n_,    t_overflow_assert);
@@ -137,16 +138,53 @@ namespace string
       len_ += fill_(str + len_, max - len_, block, I());
     }
 
+    // XXX move to cpp file - begin
+
     inline
-    t_void va_assign(p_str_ str, t_n_ max, p_cstr_ format, va_list vars) {
-      len_ = build_(str, max, format, vars, I());
+    t_n_ va_assign(p_str_ str, t_n_ max, p_cstr_ fmt, va_list vars) {
+      t_n_ len = build_(str, max, fmt, vars, I());
+      if (len <= max)
+        len_ = release(len);
+      return len;
     }
 
     inline
-    t_void va_append(p_str_ str, t_n_ max, const t_char* format,
-                     va_list vars) {
-      len_ += build_(str + len_, max - len_, format, vars, I());
+    t_n_ va_append(p_str_ str, t_n_ max, const t_char* fmt, va_list vars) {
+      t_n_ left = max - len_;
+      t_n_ len = build_(str + len_, left, fmt, vars, I());
+      if (len <= left) {
+        len_ += len;
+        return 0;
+      }
+      return len + len_;
     }
+
+    inline
+    t_n_ va_assign_(p_str_ str, t_n_ max, p_cstr_ fmt, va_list vars) {
+      va_list args;
+      va_copy(args, vars);
+      t_n_ len = build_(str, max, fmt, args);
+      va_end(args);
+      if (len <= max)
+        len_ = release(len);
+      return len;
+    }
+
+    inline
+    t_n_ va_append_(p_str_ str, t_n_ max, const t_char* fmt, va_list vars) {
+      va_list args;
+      va_copy(args, vars);
+      t_n_ left = max - len_;
+      t_n_ len = build_(str + len_, left, fmt, args);
+      va_end(args);
+      if (len <= left) {
+        len_ += len;
+        return 0;
+      }
+      return len + len_;
+    }
+
+    // XXX move to cpp file - end
 
     inline
     t_void display(p_cstr_ str) const {

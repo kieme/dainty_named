@@ -49,7 +49,7 @@ namespace string
     return blks*64 + multiple_of_64_(chars + 1);
   }
 
-  p_str_ alloc_  (t_n_ n) {
+  p_str_ alloc_(t_n_ n) {
     p_str_ str = (p_str_)std::malloc(n + 1);
     if (!str)
       assert(0); // out of memory - invalid strings won't exist!
@@ -57,11 +57,23 @@ namespace string
   }
 
   t_void dealloc_(p_str_ str) {
-    std::free(str);
+    if (str)
+      std::free(str);
   }
 
   p_str_ realloc_(p_str_ str, t_n_ n) {
-    return (p_str_)std::realloc(str, n + 1);
+    str = (p_str_)std::realloc(str, n + 1);
+    if (!str)
+      assert(0); // out of memory - invalid strings won't exist!
+    return str;
+  }
+
+  t_n_ build_(p_str_ dst, t_n_ max, p_cstr_ format, va_list vars) {
+    if (max)
+      ++max;
+    t_int n = std::vsnprintf(dst, max, format, vars);
+    assert(n > 0);
+    return n;
   }
 
   t_n_ build_(p_str_ dst, t_n_ max, p_cstr_ format, va_list vars,
