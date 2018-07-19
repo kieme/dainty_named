@@ -24,10 +24,10 @@
 
 ******************************************************************************/
 
-#include <assert.h>
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include "dainty_named_assert.h"
 #include "dainty_named_string_impl.h"
 
 namespace dainty
@@ -52,7 +52,7 @@ namespace string
   p_str_ alloc_(t_n_ n) {
     p_str_ str = (p_str_)std::malloc(n + 1);
     if (!str)
-      assert(0); // out of memory - invalid strings won't exist!
+      assert_now(p_cstr("malloc failed to allocate"));
     return str;
   }
 
@@ -64,7 +64,7 @@ namespace string
   p_str_ realloc_(p_str_ str, t_n_ n) {
     str = (p_str_)std::realloc(str, n + 1);
     if (!str)
-      assert(0); // out of memory - invalid strings won't exist!
+      assert_now(p_cstr("realloc failed to allocate"));
     return str;
   }
 
@@ -72,21 +72,24 @@ namespace string
     if (max)
       ++max;
     t_int n = std::vsnprintf(dst, max, format, vars);
-    assert(n > 0);
+    assert_if_false(n > 0,
+                   p_cstr("failed to build, std::vsnprintf failed"));
     return n;
   }
 
   t_n_ build_(p_str_ dst, t_n_ max, p_cstr_ format, va_list vars,
               t_overflow_assert) {
     t_int n = std::vsnprintf(dst, max + 1, format, vars);
-    assert(n > 0 && (t_n_)n <= max);
+    assert_if_false(n > 0 && (t_n_)n <= max,
+                    p_cstr("failed to build, buffer might be too small"));
     return n;
   }
 
   t_n_ build_(p_str_ dst, t_n_ max, p_cstr_ format, va_list vars,
               t_overflow_truncate) {
     t_int n = std::vsnprintf(dst, max + 1, format, vars);
-    assert(n>0);
+    assert_if_false(n > 0,
+                    p_cstr("failed to build, std::vsnprintf failed"));
     if ((t_n_)n > max)
       n = max;
     return n;
@@ -97,7 +100,7 @@ namespace string
     for (; cnt < min && src[cnt]; ++cnt)
       dst[cnt] = src[cnt];
     if (src[cnt] && cnt != n)
-      assert(0);
+      assert_now(p_cstr("buffer not big enough"));
     dst[cnt] = '\0';
     return cnt;
   }
@@ -115,7 +118,7 @@ namespace string
     for (; cnt < max && src[cnt]; ++cnt)
       dst[cnt] = src[cnt];
     if (src[cnt])
-      assert(0);
+      assert_now(p_cstr("buffer not big enough"));
     dst[cnt] = '\0';
     return cnt;
   }
@@ -131,7 +134,7 @@ namespace string
   t_n_ fill_(p_str_ dst, t_n_ max, r_cblock block, t_overflow_assert) {
     auto bmax = get(block.max);
     if (bmax > max)
-      assert(0);
+      assert_now(p_cstr("buffer not big enough"));
     for (t_n_ cnt = 0; cnt < bmax; ++cnt)
       dst[cnt] = block.c;
     dst[bmax] = '\0';
