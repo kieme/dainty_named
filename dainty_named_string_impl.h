@@ -38,9 +38,9 @@ namespace string
 {
   using named::t_bool;
   using named::t_void;
-  using named::p_str_;
   using named::p_cstr_;
-  using named::p_cstr;
+  using named::P_cstr_;
+  using named::P_cstr;
   using named::t_n_;
   using named::t_n;
   using named::t_char;
@@ -61,32 +61,32 @@ namespace string
     t_block(t_char _c, t_n _max) : c(_c), max(_max) { };
   };
 
-  using r_cblock = const t_block&;
+  using R_block = named::t_prefix<t_block>::R_;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  t_n_ build_  (p_str_, t_n_, p_cstr_, va_list);
-  t_n_ build_  (p_str_, t_n_, p_cstr_, va_list, t_overflow_assert);
-  t_n_ build_  (p_str_, t_n_, p_cstr_, va_list, t_overflow_truncate);
-  t_n_ copy_   (p_str_, t_n_, p_cstr_, t_n_,    t_overflow_assert);
-  t_n_ copy_   (p_str_, t_n_, p_cstr_, t_n_,    t_overflow_truncate);
-  t_n_ copy_   (p_str_, t_n_, p_cstr_,          t_overflow_assert);
-  t_n_ copy_   (p_str_, t_n_, p_cstr_,          t_overflow_truncate);
-  t_n_ fill_   (p_str_, t_n_, r_cblock,         t_overflow_assert);
-  t_n_ fill_   (p_str_, t_n_, r_cblock,         t_overflow_truncate);
+  t_n_ build_  (p_cstr_, t_n_, P_cstr_, va_list);
+  t_n_ build_  (p_cstr_, t_n_, P_cstr_, va_list, t_overflow_assert);
+  t_n_ build_  (p_cstr_, t_n_, P_cstr_, va_list, t_overflow_truncate);
+  t_n_ copy_   (p_cstr_, t_n_, P_cstr_, t_n_,    t_overflow_assert);
+  t_n_ copy_   (p_cstr_, t_n_, P_cstr_, t_n_,    t_overflow_truncate);
+  t_n_ copy_   (p_cstr_, t_n_, P_cstr_,          t_overflow_assert);
+  t_n_ copy_   (p_cstr_, t_n_, P_cstr_,          t_overflow_truncate);
+  t_n_ fill_   (p_cstr_, t_n_, R_block,          t_overflow_assert);
+  t_n_ fill_   (p_cstr_, t_n_, R_block,          t_overflow_truncate);
 
-  t_n_   calc_chr_(t_n_, t_n_);
-  p_str_ alloc_   (t_n_);
-  t_void dealloc_ (p_str_);
-  p_str_ realloc_ (p_str_, t_n_);
-  t_bool prepare_ (p_str_&, t_n_, t_n_);
+  t_n_    calc_chr_(t_n_, t_n_);
+  p_cstr_ alloc_   (t_n_);
+  t_void  dealloc_ (p_cstr_);
+  p_cstr_ realloc_ (p_cstr_, t_n_);
+  t_bool  prepare_ (p_cstr_&, t_n_, t_n_);
 
-  t_void display_ (p_cstr_);
-  t_int  compare_ (p_cstr_, p_cstr_);
-  t_bool match_   (p_cstr_, p_cstr_ pattern);
-  t_n_   count_   (t_char,  p_cstr_);
-  t_n_   length_  (p_cstr_);
-  t_n_   length_  (p_cstr_, va_list);
+  t_void display_ (P_cstr_);
+  t_int  compare_ (P_cstr_, P_cstr_);
+  t_bool match_   (P_cstr_, P_cstr_ pattern);
+  t_n_   count_   (t_char,  P_cstr_);
+  t_n_   length_  (P_cstr_);
+  t_n_   length_  (P_cstr_, va_list);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -94,7 +94,7 @@ namespace string
   class t_string_impl_ {
   public:
     using t_char   = named::t_char;
-    using r_cblock = string::r_cblock;
+    using R_block = string::R_block;
 
     //inline
     //t_string_impl_() : len_{0} {
@@ -105,43 +105,43 @@ namespace string
     }
 
     inline
-    t_string_impl_(p_str_ str) : len_{0} {
+    t_string_impl_(p_cstr_ str) : len_{0} {
       str[0] = '\0';
     }
 
     inline
-    t_string_impl_(p_str_ str, t_n_ max, p_cstr_ src)
+    t_string_impl_(p_cstr_ str, t_n_ max, P_cstr_ src)
       : len_{copy_(str, max, src, I())} {
     }
 
     inline
-    t_string_impl_(p_str_ str, t_n_ max, r_cblock block)
+    t_string_impl_(p_cstr_ str, t_n_ max, R_block block)
       : len_{fill_(str, max, block, I())} {
     }
 
     inline
-    t_void assign(p_str_ str, t_n_ max, p_cstr_ src) {
+    t_void assign(p_cstr_ str, t_n_ max, P_cstr_ src) {
       len_ = copy_(str, max, src, I());
     }
 
     inline
-    t_void assign(p_str_ str, t_n_ max, r_cblock block) {
+    t_void assign(p_cstr_ str, t_n_ max, R_block block) {
       len_ = fill_(str, max, block, I());
     }
 
     inline
-    t_void append(p_str_ str, t_n_ max, p_cstr_ src) {
+    t_void append(p_cstr_ str, t_n_ max, P_cstr_ src) {
       len_ += copy_(str + len_, max - len_, src, I());
     }
 
-    t_void append(p_str_ str, t_n_ max, r_cblock block) {
+    t_void append(p_cstr_ str, t_n_ max, R_block block) {
       len_ += fill_(str + len_, max - len_, block, I());
     }
 
     // XXX move to cpp file - begin
 
     inline
-    t_n_ va_assign(p_str_ str, t_n_ max, p_cstr_ fmt, va_list vars) {
+    t_n_ va_assign(p_cstr_ str, t_n_ max, P_cstr_ fmt, va_list vars) {
       t_n_ len = build_(str, max, fmt, vars, I());
       if (len <= max)
         len_ = release(len);
@@ -149,7 +149,7 @@ namespace string
     }
 
     inline
-    t_n_ va_append(p_str_ str, t_n_ max, const t_char* fmt, va_list vars) {
+    t_n_ va_append(p_cstr_ str, t_n_ max, P_cstr_ fmt, va_list vars) {
       t_n_ left = max - len_;
       t_n_ len = build_(str + len_, left, fmt, vars, I());
       if (len <= left) {
@@ -160,7 +160,7 @@ namespace string
     }
 
     inline
-    t_n_ va_assign_(p_str_ str, t_n_ max, p_cstr_ fmt, va_list vars) {
+    t_n_ va_assign_(p_cstr_ str, t_n_ max, P_cstr_ fmt, va_list vars) {
       va_list args;
       va_copy(args, vars);
       t_n_ len = build_(str, max, fmt, args);
@@ -171,7 +171,7 @@ namespace string
     }
 
     inline
-    t_n_ va_append_(p_str_ str, t_n_ max, const t_char* fmt, va_list vars) {
+    t_n_ va_append_(p_cstr_ str, t_n_ max, P_cstr_ fmt, va_list vars) {
       va_list args;
       va_copy(args, vars);
       t_n_ left = max - len_;
@@ -187,13 +187,13 @@ namespace string
     // XXX move to cpp file - end
 
     inline
-    t_void display(p_cstr_ str) const {
+    t_void display(P_cstr_ str) const {
       if (len_)
         display_(str);
     }
 
     inline
-    t_void display_then_clear(p_str_ str) {
+    t_void display_then_clear(p_cstr_ str) {
       if (len_) {
         display_(str);
         str[0] = '\0';
@@ -201,17 +201,17 @@ namespace string
     }
 
     inline
-    t_bool match(p_cstr_ str, p_cstr_ pattern) const {
+    t_bool match(P_cstr_ str, P_cstr_ pattern) const {
       return match_(str, pattern);
     }
 
     inline
-    t_void clear(p_str_ str) {
+    t_void clear(p_cstr_ str) {
       str[0] = '\0';
     }
 
     inline
-    p_cstr_ c_str(p_cstr_ str) const {
+    P_cstr_ c_str(P_cstr_ str) const {
       return str;
     }
 
@@ -221,30 +221,30 @@ namespace string
     }
 
     inline
-    t_n_ count(p_cstr_ str, t_char c) const {
+    t_n_ count(P_cstr_ str, t_char c) const {
       return count_(c, str);
     }
 
     inline
-    t_char front(p_cstr_ str) const {
+    t_char front(P_cstr_ str) const {
       return len_ ? str[0] : '\0';
     }
 
     inline
-    t_char back(p_cstr_ str) const {
+    t_char back(P_cstr_ str) const {
       return len_ ? str[len_ - 1] : '\0';
     }
 
     template<class F>
     inline
-    t_void each(p_cstr_ str, F f) {
+    t_void each(P_cstr_ str, F f) {
       for (t_n_ n = 0; n < len_; ++n)
         f(str[n]);
     }
 
     template<class F>
     inline
-    t_void each(p_cstr_ str, F f) const {
+    t_void each(P_cstr_ str, F f) const {
       for (t_n_ n = 0; n < len_; ++n)
         f(str[n]);
     }

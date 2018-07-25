@@ -32,7 +32,7 @@ namespace dainty
 {
 namespace named
 {
-  t_void assert_now(p_cstr reason) {
+  t_void assert_now(P_cstr reason) {
     printf("assert: %s\n", get(reason));
     fflush(stdout);
     assert(0);

@@ -33,16 +33,16 @@ namespace dainty
 {
 namespace named
 {
-  t_void assert_now(p_cstr reason);
+  t_void assert_now(P_cstr reason);
 
   inline
-   t_void assert_if_true(t_bool cond, p_cstr reason) {
+   t_void assert_if_true(t_bool cond, P_cstr reason) {
     if (cond)
       assert_now(reason);
   }
 
   inline
-  t_void assert_if_false(t_bool cond, p_cstr reason) {
+  t_void assert_if_false(t_bool cond, P_cstr reason) {
     if (!cond)
       assert_now(reason);
   }

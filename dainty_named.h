@@ -190,11 +190,9 @@ namespace named
 
     using p_  = T*;
     using P_  = const T*;
-    using p_c = P_;
 
     using r_  = T&;
     using R_  = const T&;
-    using r_c = R_;
 
     t_prefix() = delete;
   };
@@ -205,7 +203,6 @@ namespace named
 
     using p_  = t_void*;
     using P_  = const t_void*;
-    using p_c = P_;
 
     t_prefix() = delete;
   };
@@ -216,8 +213,8 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  using p_void  = t_prefix<void>::p_;
-  using p_cvoid = t_prefix<void>::P_;
+  using p_void = t_prefix<void>::p_;
+  using P_void = t_prefix<void>::P_;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -357,16 +354,16 @@ namespace named
   using t_bix_      = t_ix_;
   using t_eix_      = t_ix_;
   using t_validity_ = t_bool;
-  using p_str_      = t_prefix<char>::p_;
-  using p_cstr_     = t_prefix<char>::P_;
+  using p_cstr_     = t_prefix<char>::p_;
+  using P_cstr_     = t_prefix<char>::P_;
 
   using t_n        = t_explicit<t_n_,        t_n_tag_>;   // n, number
   using t_ix       = t_explicit<t_ix_,       t_ix_tag_>;  // general index
   using t_bix      = t_explicit<t_ix_,       t_bix_tag_>; // begin index
   using t_eix      = t_explicit<t_ix_,       t_eix_tag_>; // end index
   using t_validity = t_explicit<t_validity_, t_validity_tag_>;
-  using p_str      = t_explicit<p_str_,      t_str_tag_>;
-  using p_cstr     = t_explicit<p_cstr_,     t_cstr_tag_>;
+  using p_cstr     = t_explicit<p_cstr_,     t_str_tag_>;
+  using P_cstr     = t_explicit<P_cstr_,     t_cstr_tag_>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -390,12 +387,12 @@ namespace named
   }
 
   template<int N>
-  constexpr p_str  mk_str(char (&str)[N])         { return p_str{str};   }
-  constexpr p_str  mk_str(p_str_ str)             { return p_str{str};   }
+  constexpr p_cstr mk_str(char (&str)[N])         { return p_cstr{str};  }
+  constexpr p_cstr mk_str(p_cstr_ str)            { return p_cstr{str};  }
 
   template<int N>
-  constexpr p_cstr mk_cstr(const char (&cstr)[N]) { return p_cstr{cstr}; }
-  constexpr p_cstr mk_cstr(p_cstr_ cstr)          { return p_cstr{cstr}; }
+  constexpr P_cstr mk_cstr(const char (&cstr)[N]) { return P_cstr{cstr}; }
+  constexpr P_cstr mk_cstr(P_cstr_ cstr)          { return P_cstr{cstr}; }
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -404,12 +401,12 @@ namespace named
     union {
       t_int64 id;
       p_void  ptr;
-      p_cvoid cptr;
+      P_void cptr;
     };
     t_user() : id(0) { }
-    inline t_user(t_int64 _id)   : id  (_id)   { }
-    inline t_user(p_void  _ptr)  : ptr (_ptr)  { }
-    inline t_user(p_cvoid _cptr) : cptr(_cptr) { }
+    inline t_user(t_int64  _id) :   id(_id)   { }
+    inline t_user(p_void  _ptr) :  ptr(_ptr)  { }
+    inline t_user(P_void _cptr) : cptr(_cptr) { }
   };
 
   template<typename TAG>
