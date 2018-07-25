@@ -152,9 +152,6 @@ namespace named
   using t_double       = double;
   using t_void         = void;
 
-  using p_void         = void*;
-  using p_cvoid        = const void*;
-
   using t_int8         = std::int8_t;
   using t_int16        = std::int16_t;
   using t_int32        = std::int32_t;
@@ -184,6 +181,43 @@ namespace named
   using t_uint_fast16  = std::uint_fast16_t;
   using t_uint_fast32  = std::uint_fast32_t;
   using t_uint_fast64  = std::uint_fast64_t;
+
+///////////////////////////////////////////////////////////////////////////////
+
+  template<typename T>
+  struct t_prefix {
+    using t_  = T;
+
+    using p_  = T*;
+    using P_  = const T*;
+    using p_c = P_;
+
+    using r_  = T&;
+    using R_  = const T&;
+    using r_c = R_;
+
+    t_prefix() = delete;
+  };
+
+  template<>
+  struct t_prefix<t_void> {
+    using t_  = t_void;
+
+    using p_  = t_void*;
+    using P_  = const t_void*;
+    using p_c = P_;
+
+    t_prefix() = delete;
+  };
+
+  template<typename T> struct t_prefix<T*>;
+  template<typename T> struct t_prefix<T&>;
+  template<typename T> struct t_prefix<const T>;
+
+///////////////////////////////////////////////////////////////////////////////
+
+  using p_void  = t_prefix<void>::p_;
+  using p_cvoid = t_prefix<void>::P_;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -323,16 +357,16 @@ namespace named
   using t_bix_      = t_ix_;
   using t_eix_      = t_ix_;
   using t_validity_ = t_bool;
-  using p_str_      = char*;
-  using p_cstr_     = const char*;
+  using p_str_      = t_prefix<char>::p_;
+  using p_cstr_     = t_prefix<char>::P_;
 
-  using t_n        = t_explicit<t_n_,  t_n_tag_>;   // n, number
-  using t_ix       = t_explicit<t_ix_, t_ix_tag_>;  // general index
-  using t_bix      = t_explicit<t_ix_, t_bix_tag_>; // begin index
-  using t_eix      = t_explicit<t_ix_, t_eix_tag_>; // end index
+  using t_n        = t_explicit<t_n_,        t_n_tag_>;   // n, number
+  using t_ix       = t_explicit<t_ix_,       t_ix_tag_>;  // general index
+  using t_bix      = t_explicit<t_ix_,       t_bix_tag_>; // begin index
+  using t_eix      = t_explicit<t_ix_,       t_eix_tag_>; // end index
   using t_validity = t_explicit<t_validity_, t_validity_tag_>;
-  using p_str      = t_explicit<p_str_,  t_str_tag_>;
-  using p_cstr     = t_explicit<p_cstr_, t_cstr_tag_>;
+  using p_str      = t_explicit<p_str_,      t_str_tag_>;
+  using p_cstr     = t_explicit<p_cstr_,     t_cstr_tag_>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -368,14 +402,14 @@ namespace named
   template<typename TAG>
   struct t_user {
     union {
-      named::t_int64 id;
-      named::p_void  ptr;
-      named::p_cvoid cptr;
+      t_int64 id;
+      p_void  ptr;
+      p_cvoid cptr;
     };
     t_user() : id(0) { }
-    inline t_user(named::t_int64 _id)   : id  (_id)   { }
-    inline t_user(named::p_void  _ptr)  : ptr (_ptr)  { }
-    inline t_user(named::p_cvoid _cptr) : cptr(_cptr) { }
+    inline t_user(t_int64 _id)   : id  (_id)   { }
+    inline t_user(p_void  _ptr)  : ptr (_ptr)  { }
+    inline t_user(p_cvoid _cptr) : cptr(_cptr) { }
   };
 
   template<typename TAG>
@@ -390,6 +424,7 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
+  // should be named reset
   constexpr
   t_bool release(t_bool& t) {
     t_bool tmp = t;
