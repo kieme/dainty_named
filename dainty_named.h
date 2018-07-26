@@ -194,6 +194,8 @@ namespace named
     using r_  = T&;
     using R_  = const T&;
 
+    using x_  = T&&;
+
     t_prefix() = delete;
   };
 
@@ -301,12 +303,20 @@ namespace named
     using t_tag      = TAG;
     using t_validate = V;
 
-    constexpr explicit t_explicit(t_value value) : value_(V::check(value)) { }
+    constexpr explicit t_explicit(t_value value) : value_(V::check(value)) {
+    }
+
+    template<class T1, class V1>
+    constexpr explicit t_explicit(t_explicit<T1, TAG, V1> value)
+      : value_(V::check(value.value_)) {
+    }
+
     t_explicit() = delete;                              // for clarity
     t_explicit(const t_explicit&) = default;            // for clarity
     t_explicit& operator=(const t_explicit&) = default; // for clarity
 
   private:
+    template<class T1, class TAG1, class V1> friend class t_explicit;
     template<class T1, class TAG1, class V1>
     friend constexpr T1  get(t_explicit<T1, TAG1, V1>);
     template<class T1, class TAG1, class V1>
@@ -346,7 +356,6 @@ namespace named
   enum t_bix_tag_      {};
   enum t_eix_tag_      {};
   enum t_validity_tag_ {};
-  enum t_str_tag_      {};
   enum t_cstr_tag_     {};
 
   using t_n_        = t_uint32;
@@ -362,7 +371,7 @@ namespace named
   using t_bix      = t_explicit<t_ix_,       t_bix_tag_>; // begin index
   using t_eix      = t_explicit<t_ix_,       t_eix_tag_>; // end index
   using t_validity = t_explicit<t_validity_, t_validity_tag_>;
-  using p_cstr     = t_explicit<p_cstr_,     t_str_tag_>;
+  using p_cstr     = t_explicit<p_cstr_,     t_cstr_tag_>;
   using P_cstr     = t_explicit<P_cstr_,     t_cstr_tag_>;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -421,9 +430,8 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  // should be named reset
   constexpr
-  t_bool release(t_bool& t) {
+  t_bool reset(t_bool& t) {
     t_bool tmp = t;
     t = false;
     return tmp;
@@ -431,7 +439,7 @@ namespace named
 
   template<class T>
   constexpr
-  T release(T& t) {
+  T reset(T& t) {
     T tmp = t;
     t = 0;
     return tmp;
@@ -439,7 +447,7 @@ namespace named
 
   template<class T>
   constexpr
-  T* release(T*& t) {
+  T* reset(T*& t) {
     T* tmp = t;
     t = nullptr;
     return tmp;
@@ -447,11 +455,15 @@ namespace named
 
   template<class T, class TAG>
   constexpr
-  T release(t_explicit<T, TAG>& t)       { return release(set(t)); }
+  T reset(t_explicit<T, TAG>& t) {
+    return reset(set(t));
+  }
 
   template<class TAG>
   constexpr
-  named::t_int64 release(t_user<TAG>& t) { return release(t.id); }
+  t_int64 reset(t_user<TAG>& t) {
+    return reset(t.id);
+  }
 
 ///////////////////////////////////////////////////////////////////////////////
 

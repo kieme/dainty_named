@@ -122,10 +122,9 @@ constexpr t_vlanid operator"" _vlanid(named::t_ullong value) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-named::p_cstr p{"hallo"};
+named::P_cstr p{"hallo"};
 
 ///////////////////////////////////////////////////////////////////////////////
-
 
 int main() {
   set_point(1,2);
@@ -156,6 +155,10 @@ int main() {
 
   constexpr auto ptr = named::mk_cstr("hallo");
   std::cout << "ptr = " << get(ptr) << std::endl;
+
+  char buf[] = "hallo";
+  named::p_cstr str1(buf);
+  named::P_cstr str2(str1);
 
   return 0;
 }
