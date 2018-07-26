@@ -144,7 +144,7 @@ namespace string
     t_n_ va_assign(p_cstr_ str, t_n_ max, P_cstr_ fmt, va_list vars) {
       t_n_ len = build_(str, max, fmt, vars, I());
       if (len <= max)
-        len_ = release(len);
+        len_ = reset(len);
       return len;
     }
 
@@ -166,7 +166,7 @@ namespace string
       t_n_ len = build_(str, max, fmt, args);
       va_end(args);
       if (len <= max)
-        len_ = release(len);
+        len_ = reset(len);
       return len;
     }
 
