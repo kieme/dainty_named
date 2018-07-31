@@ -457,40 +457,93 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  constexpr
-  t_bool reset(t_bool& t) {
+  constexpr t_bool reset(t_bool& t) {
     t_bool tmp = t;
     t = false;
     return tmp;
   }
 
   template<class T>
-  constexpr
-  T reset(T& t) {
+  constexpr T reset(T& t) {
     T tmp = t;
     t = 0;
     return tmp;
   }
 
   template<class T>
-  constexpr
-  T* reset(T*& t) {
+  constexpr T* reset(T*& t) {
     T* tmp = t;
     t = nullptr;
     return tmp;
   }
 
   template<class T, class TAG>
-  constexpr
-  T reset(t_explicit<T, TAG>& t) {
+  constexpr T reset(t_explicit<T, TAG>& t) {
     return reset(set(t));
   }
 
   template<class TAG>
-  constexpr
-  t_int64 reset(t_user<TAG>& t) {
+  constexpr t_int64 reset(t_user<TAG>& t) {
     return reset(t.id);
   }
+
+///////////////////////////////////////////////////////////////////////////////
+
+  constexpr t_bool reset(t_bool& t, t_bool value) {
+    t_bool tmp = t;
+    t = value;
+    return tmp;
+  }
+
+  template<class T>
+  constexpr T reset(T& t, T value) {
+    T tmp = t;
+    t = value;
+    return tmp;
+  }
+
+  template<class T>
+  constexpr T* reset(T*& t, T* value) {
+    T* tmp = t;
+    t = value;
+    return tmp;
+  }
+
+  template<class T, class TAG>
+  constexpr T reset(t_explicit<T, TAG>& t, T value) {
+    return reset(set(t), value);
+  }
+
+  template<class TAG>
+  constexpr t_int64 reset(t_user<TAG>& t, t_int64 value) {
+    return reset(t.id, value);
+  }
+
+///////////////////////////////////////////////////////////////////////////////
+
+  enum  t_nsec_tag_ {};
+  using t_nsec_ = t_ullong;
+  using t_nsec  = t_explicit<t_nsec_, t_nsec_tag_>;
+
+  enum  t_usec_tag_ {};
+  using t_usec_ = t_ulong;
+  using t_usec  = t_explicit<t_usec_, t_usec_tag_>;
+
+  enum  t_msec_tag_ {};
+  using t_msec_ = t_uint;
+  using t_msec  = t_explicit<t_msec_, t_msec_tag_>;
+
+  enum  t_sec_tag_ {};
+  using t_sec_ = t_uint;
+  using t_sec  = t_explicit<t_sec_, t_sec_tag_>;
+
+  enum  t_min_tag_ {};
+  using t_min_ = t_ushort;
+  using t_min  = t_explicit<t_min_, t_min_tag_>;
+
+  enum  t_ticks_tag_ {};
+  using t_ticks_ = t_uint64;
+  using t_ticks  = t_explicit<t_ticks_, t_ticks_tag_>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
