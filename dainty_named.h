@@ -405,6 +405,33 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
+  enum  t_errn_tag_ {};
+  using t_errn_ = named::t_int;
+  using t_errn  = named::t_explicit<t_errn_, t_errn_tag_>;
+
+  constexpr t_bool operator==(t_errn errn, t_validity validity) {
+    return get(errn) == 0 && validity == VALID;
+  }
+
+///////////////////////////////////////////////////////////////////////////////
+
+  template<typename T>
+  class t_verifiable {
+  public:
+    T      value;
+    t_errn errn;
+
+    constexpr operator t_validity() const {
+      return get(errn) == 0 ? VALID : INVALID;
+    }
+
+    constexpr
+    t_verifiable(T _value, t_errn _errn) : value(_value), errn(_errn) {
+    }
+  };
+
+///////////////////////////////////////////////////////////////////////////////
+
   template<typename TAG>
   struct t_user {
     union {
