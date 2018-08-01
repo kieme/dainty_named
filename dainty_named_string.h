@@ -508,8 +508,8 @@ namespace string
   template<class I1>
   inline
   t_string<TAG, 0, I>::t_string(t_string<TAG, 0, I1>&& str)
-      : max_{release(str.max_)}, blks_{release(str.blks_)},
-        store_{release(str.store_)}, impl_ {release(str.impl_.len_)} {
+      : max_{reset(str.max_)}, blks_{reset(str.blks_)},
+        store_{reset(str.store_)}, impl_ {reset(str.impl_.len_)} {
   }
 
   template<class TAG, class I>
@@ -590,10 +590,10 @@ namespace string
   t_string<TAG, 0, I>&
       t_string<TAG, 0, I>::operator=(t_string<TAG, 0, I1>&& str) {
     dealloc_(store_);
-    max_       = release(str.max_);
-    blks_      = release(str.blks_);
-    store_     = release(str.store_);
-    impl_.len_ = release(str.impl_.len_);
+    max_       = reset(str.max_);
+    blks_      = reset(str.blks_);
+    store_     = reset(str.store_);
+    impl_.len_ = reset(str.impl_.len_);
     return *this;
   }
 
