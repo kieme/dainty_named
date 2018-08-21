@@ -547,6 +547,25 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
+  template<t_n_ N, typename TAG>
+  class t_multiple {
+  public:
+    constexpr static t_n of() {
+      return t_n{N};
+    }
+
+    constexpr t_multiple(t_n_ _value) : value(_value) {
+    }
+
+    t_n value;
+  };
+
+  template<t_n_ N, typename TAG>
+  constexpr t_n multiple_of(t_multiple<N, TAG> multiple) {
+    return t_n{N*get(multiple.value)};
+  }
+
+///////////////////////////////////////////////////////////////////////////////
 }
 }
 
