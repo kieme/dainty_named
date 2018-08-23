@@ -376,6 +376,15 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
+  // only support very limited operators for t_n because of its massive use.
+
+  constexpr t_bool operator==(t_n lh, t_n rh)  { return get(lh) == get(rh); }
+  constexpr t_bool operator!=(t_n lh, t_n rh)  { return get(lh) != get(rh); }
+  constexpr t_bool operator< (t_n lh, t_n rh)  { return get(lh) < get(rh);  }
+  constexpr t_bool operator<=(t_n lh, t_n rh)  { return get(lh) <= get(rh); }
+
+///////////////////////////////////////////////////////////////////////////////
+
   constexpr t_validity   VALID{true};
   constexpr t_validity INVALID{false};
 
@@ -390,6 +399,8 @@ namespace named
   constexpr t_bix operator"" _bix(t_ullong ix) { return t_bix(ix); }
   constexpr t_eix operator"" _eix(t_ullong ix) { return t_eix(ix); }
   constexpr t_n   operator"" _n  (t_ullong n)  { return t_n(n);    }
+
+///////////////////////////////////////////////////////////////////////////////
 
   constexpr t_bool operator==(const t_validity& lh, const t_validity& rh) {
     return get(lh) == get(rh);
