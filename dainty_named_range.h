@@ -342,11 +342,14 @@ namespace range
   inline
   t_bool operator==(t_crange<I, TAG> lh, t_crange<I, TAG> rh) {
     if (lh.n == rh.n) {
-      t_n_ i = 0, n = get(lh.n);
-      for (; i < n; ++i)
-        if (lh.item[i] != rh.item[i])
-          break;
-      return i == n;
+      if (lh.item != rh.item) {
+        t_n_ i = 0, n = get(lh.n);
+        for (; i < n; ++i)
+          if (lh.item[i] != rh.item[i])
+            break;
+        return i == n;
+      }
+      return true;
     }
     return false;
   }
