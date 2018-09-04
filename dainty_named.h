@@ -451,6 +451,16 @@ namespace named
     return verifiable.value;
   }
 
+  template<class T, class TAG, class V>
+  constexpr T get(const t_verifiable<t_explicit<T, TAG, V>>& verifiable) {
+    return get(verifiable.value);
+  }
+
+  template<class T, class TAG, class V>
+  constexpr T& set(t_verifiable<t_explicit<T, TAG, V>>& verifiable) {
+    return set(verifiable.value);
+  }
+
 ///////////////////////////////////////////////////////////////////////////////
 
   template<typename TAG>
