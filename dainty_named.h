@@ -386,10 +386,14 @@ namespace named
   constexpr t_bool operator< (t_n lh, t_n rh)  { return get(lh) < get(rh);  }
   constexpr t_bool operator<=(t_n lh, t_n rh)  { return get(lh) <= get(rh); }
 
+  constexpr t_bool operator==(t_fd lh, t_fd rh) { return get(lh) == get(rh); }
+  constexpr t_bool operator!=(t_fd lh, t_fd rh) { return !(lh == rh);        }
+
 ///////////////////////////////////////////////////////////////////////////////
 
   constexpr t_validity   VALID{true};
   constexpr t_validity INVALID{false};
+  constexpr t_fd       BAD_FD {-1};
 
 ///////////////////////////////////////////////////////////////////////////////
 
