@@ -552,6 +552,11 @@ namespace named
     return reset(set(t), value);
   }
 
+  template<class T, class TAG>
+  constexpr T reset(t_explicit<T, TAG>& t, t_explicit<T, TAG> value) {
+    return reset(set(t), get(value));
+  }
+
   template<class TAG>
   constexpr t_int64 reset(t_user<TAG>& t, t_int64 value) {
     return reset(t.id, value);
