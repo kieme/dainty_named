@@ -683,7 +683,7 @@ namespace string
   inline
   t_string<TAG, 0, I>& t_string<TAG, 0, I>::va_append(P_cstr_ fmt,
                                                       va_list vars) {
-#if 2
+#if 1
   readjust_(length_(fmt, vars));
   impl_.va_append(store_, max_, fmt, vars);
 #else
