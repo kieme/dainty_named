@@ -92,11 +92,11 @@ namespace string
     template<class TAG1, t_n_ N1, class I1>
     t_bool match(const t_string<TAG1, N1, I1>& pattern) const;
 
-    t_void clear();
-    P_cstr c_str () const;
-    t_n    get_length  () const;
-    t_n    get_capacity() const;
-    t_n    count       (t_char) const;
+    t_void        clear();
+    P_cstr        c_str () const;
+    t_n           get_length  () const;
+    constexpr t_n get_capacity() const;
+    t_n           count       (t_char) const;
 
     t_char front() const;
     t_char back () const;
@@ -407,7 +407,7 @@ namespace string
   }
 
   template<class TAG, t_n_ N, class I>
-  inline
+  constexpr
   t_n t_string<TAG, N, I>::get_capacity() const {
     return t_n{N};
   }
