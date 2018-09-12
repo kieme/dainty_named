@@ -569,7 +569,6 @@ namespace named
     constexpr static t_n of() {
       return t_n{N};
     }
-
     constexpr t_multiple(t_n_ _value) : value(_value) {
     }
 
