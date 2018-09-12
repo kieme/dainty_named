@@ -220,70 +220,43 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  template<typename T>
-  struct t_support_explicit_           { };
+  template<typename T> struct t__explicit_ { };
 
-  template<>
-  struct t_support_explicit_<t_bool>   { typedef t_bool t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_char>   { typedef t_char t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_uchar>  { typedef t_uchar t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_int>    { typedef t_int t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_uint>   { typedef t_uint t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_short>  { typedef t_short t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_ushort> { typedef t_ushort t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_long>   { typedef t_long t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_ulong>  { typedef t_ulong t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_llong>  { typedef t_llong t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_ullong> { typedef t_ullong t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_double> { typedef t_double t_type_; };
-
-  template<>
-  struct t_support_explicit_<t_void>   { typedef t_void t_type_; };
+  template<> struct t__explicit_<t_bool>   { using t_type_ = t_bool;   };
+  template<> struct t__explicit_<t_char>   { using t_type_ = t_char;   };
+  template<> struct t__explicit_<t_uchar>  { using t_type_ = t_uchar;  };
+  template<> struct t__explicit_<t_int>    { using t_type_ = t_int;    };
+  template<> struct t__explicit_<t_uint>   { using t_type_ = t_uint;   };
+  template<> struct t__explicit_<t_short>  { using t_type_ = t_short;  };
+  template<> struct t__explicit_<t_ushort> { using t_type_ = t_ushort; };
+  template<> struct t__explicit_<t_long>   { using t_type_ = t_long;   };
+  template<> struct t__explicit_<t_ulong>  { using t_type_ = t_ulong;  };
+  template<> struct t__explicit_<t_llong>  { using t_type_ = t_llong;  };
+  template<> struct t__explicit_<t_ullong> { using t_type_ = t_ullong; };
+  template<> struct t__explicit_<t_double> { using t_type_ = t_double; };
+  template<> struct t__explicit_<t_void>   { using t_type_ = t_void;   };
 
   template<typename T>
-  struct t_support_explicit_<T*> {
-    typedef typename t_support_explicit_<T>::t_type_* t_type_;
+  struct t__explicit_<T*> {
+    using t_type_ = typename t__explicit_<T>::t_type_*;
   };
 
   template<typename T>
-  struct t_support_explicit_<const T*> {
-    typedef const typename t_support_explicit_<T>::t_type_* t_type_;
+  struct t__explicit_<const T*> {
+    using t_type_ = const typename t__explicit_<T>::t_type_*;
   };
 
   template<typename T>
-  struct t_support_explicit_<T* const> {
-    typedef typename t_support_explicit_<T>::t_type_* const t_type_;
+  struct t__explicit_<T* const> {
+    using t_type_ = typename t__explicit_<T>::t_type_* const;
   };
 
   template<typename T>
-  struct t_support_explicit_<const T* const> {
-    typedef const typename t_support_explicit_<T>::t_type_* const t_type_;
+  struct t__explicit_<const T* const> {
+    using t_type_ = const typename t__explicit_<T>::t_type_* const;
   };
 
-  template<typename T>
-  struct t_support_explicit_<T**> { };
+  template<typename T> struct t__explicit_<T**>;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -299,7 +272,7 @@ namespace named
   template<class T, class TAG, class V = t_validate_<T, TAG> >
   class t_explicit {
   public:
-    using t_value    = typename t_support_explicit_<T>::t_type_;
+    using t_value    = typename t__explicit_<T>::t_type_;
     using t_tag      = TAG;
     using t_validate = V;
 
