@@ -333,7 +333,7 @@ namespace named
   enum t_cstr_tag_     {};
 
   using t_fd_       = t_int32;
-  using t_n_        = t_uint32;
+  using t_n_        = t_ulong;
   using t_ix_       = t_n_;
   using t_bix_      = t_ix_;
   using t_eix_      = t_ix_;
