@@ -138,50 +138,6 @@ namespace dainty
 {
 namespace named
 {
-  using t_bool         = bool;
-  using t_char         = char;
-  using t_uchar        = unsigned char;
-  using t_int          = int;
-  using t_uint         = unsigned int;
-  using t_short        = short;
-  using t_ushort       = unsigned short;
-  using t_long         = long int;
-  using t_ulong        = unsigned long int;
-  using t_llong        = long long int;
-  using t_ullong       = unsigned long long int;
-  using t_double       = double;
-  using t_void         = void;
-
-  using t_int8         = std::int8_t;
-  using t_int16        = std::int16_t;
-  using t_int32        = std::int32_t;
-  using t_int64        = std::int64_t;
-
-  using t_uint8        = std::uint8_t;
-  using t_uint16       = std::uint16_t;
-  using t_uint32       = std::uint32_t;
-  using t_uint64       = std::uint64_t;
-
-  using t_int_least8   = std::int_least8_t;
-  using t_int_least16  = std::int_least16_t;
-  using t_int_least32  = std::int_least32_t;
-  using t_int_least64  = std::int_least64_t;
-
-  using t_uint_least8  = std::uint_least8_t;
-  using t_uint_least16 = std::uint_least16_t;
-  using t_uint_least32 = std::uint_least32_t;
-  using t_uint_least64 = std::uint_least64_t;
-
-  using t_int_fast8    = std::int_fast8_t;
-  using t_int_fast16   = std::int_fast16_t;
-  using t_int_fast32   = std::int_fast32_t;
-  using t_int_fast64   = std::int_fast64_t;
-
-  using t_uint_fast8   = std::uint_fast8_t;
-  using t_uint_fast16  = std::uint_fast16_t;
-  using t_uint_fast32  = std::uint_fast32_t;
-  using t_uint_fast64  = std::uint_fast64_t;
-
 ///////////////////////////////////////////////////////////////////////////////
 
   template<typename T>
@@ -200,11 +156,11 @@ namespace named
   };
 
   template<>
-  struct t_prefix<t_void> {
-    using t_  = t_void;
+  struct t_prefix<void> {
+    using t_  = void;
 
-    using p_  = t_void*;
-    using P_  = const t_void*;
+    using p_  = void*;
+    using P_  = const void*;
 
     t_prefix() = delete;
   };
@@ -215,8 +171,54 @@ namespace named
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  using p_void = t_prefix<void>::p_;
-  using P_void = t_prefix<void>::P_;
+  using t_bool         = t_prefix<bool>::t_;
+  using t_char         = t_prefix<char>::t_;
+  using t_uchar        = t_prefix<unsigned char>::t_;
+  using t_int          = t_prefix<int>::t_;
+  using t_uint         = t_prefix<unsigned int>::t_;
+  using t_short        = t_prefix<short>::t_;
+  using t_ushort       = t_prefix<unsigned short>::t_;
+  using t_long         = t_prefix<long int>::t_;
+  using t_ulong        = t_prefix<unsigned long int>::t_;
+  using t_llong        = t_prefix<long long int>::t_;
+  using t_ullong       = t_prefix<unsigned long long int>::t_;
+  using t_double       = t_prefix<double>::t_;
+  using t_void         = t_prefix<void>::t_;
+
+  using t_int8         = t_prefix<std::int8_t>::t_;
+  using t_int16        = t_prefix<std::int16_t>::t_;
+  using t_int32        = t_prefix<std::int32_t>::t_;
+  using t_int64        = t_prefix<std::int64_t>::t_;
+
+  using t_uint8        = t_prefix<std::uint8_t>::t_;
+  using t_uint16       = t_prefix<std::uint16_t>::t_;
+  using t_uint32       = t_prefix<std::uint32_t>::t_;
+  using t_uint64       = t_prefix<std::uint64_t>::t_;
+
+  using t_int_least8   = t_prefix<std::int_least8_t>::t_;
+  using t_int_least16  = t_prefix<std::int_least16_t>::t_;
+  using t_int_least32  = t_prefix<std::int_least32_t>::t_;
+  using t_int_least64  = t_prefix<std::int_least64_t>::t_;
+
+  using t_uint_least8  = t_prefix<std::uint_least8_t>::t_;
+  using t_uint_least16 = t_prefix<std::uint_least16_t>::t_;
+  using t_uint_least32 = t_prefix<std::uint_least32_t>::t_;
+  using t_uint_least64 = t_prefix<std::uint_least64_t>::t_;
+
+  using t_int_fast8    = t_prefix<std::int_fast8_t>::t_;
+  using t_int_fast16   = t_prefix<std::int_fast16_t>::t_;
+  using t_int_fast32   = t_prefix<std::int_fast32_t>::t_;
+  using t_int_fast64   = t_prefix<std::int_fast64_t>::t_;
+
+  using t_uint_fast8   = t_prefix<std::uint_fast8_t>::t_;
+  using t_uint_fast16  = t_prefix<std::uint_fast16_t>::t_;
+  using t_uint_fast32  = t_prefix<std::uint_fast32_t>::t_;
+  using t_uint_fast64  = t_prefix<std::uint_fast64_t>::t_;
+
+///////////////////////////////////////////////////////////////////////////////
+
+  using p_void = t_prefix<t_void>::p_;
+  using P_void = t_prefix<t_void>::P_;
 
 ///////////////////////////////////////////////////////////////////////////////
 
