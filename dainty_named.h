@@ -215,6 +215,8 @@ namespace named
   using t_uint_fast32  = t_prefix<std::uint_fast32_t>::t_;
   using t_uint_fast64  = t_prefix<std::uint_fast64_t>::t_;
 
+  using t_uintptr  = t_prefix<std::uintptr_t>::t_;
+
 ///////////////////////////////////////////////////////////////////////////////
 
   using p_void = t_prefix<t_void>::p_;
