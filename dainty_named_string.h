@@ -123,7 +123,7 @@ namespace string
     using t_char  = typename t_impl_::t_char;
     using R_block = typename t_impl_::R_block;
 
-     t_string(t_n max, t_n blks = t_n{0});
+     t_string(t_n max = t_n{64}, t_n blks = t_n{1});
      t_string(P_cstr);
      t_string(R_block);
      t_string(t_fmt, P_cstr_, ...) __attribute__((format(printf, 3, 4)));
