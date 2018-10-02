@@ -221,7 +221,7 @@ namespace string
 
   template<class TAG, t_n_ N, class I>
   inline
-  t_string<TAG, N, I>::t_string(t_fmt, P_cstr_ fmt, ...) : impl_{store_} {
+  t_string<TAG, N, I>::t_string(t_fmt, P_cstr_ fmt, ...) {
     va_list vars;
     va_start(vars, fmt);
     impl_.va_assign(store_, N+1, fmt, vars);
@@ -491,7 +491,7 @@ namespace string
 
   template<class TAG, class I>
   inline
-  t_string<TAG, 0, I>::t_string(t_fmt, P_cstr_ fmt, ...) : impl_{0U} {
+  t_string<TAG, 0, I>::t_string(t_fmt, P_cstr_ fmt, ...) {
     va_list vars;
     va_start(vars, fmt);
     va_assign(fmt, vars);

@@ -95,6 +95,10 @@ namespace string
     using R_block = string::R_block;
 
     inline
+    t_string_impl_() : len_{0} {
+    }
+
+    inline
     t_string_impl_(t_n_ len) : len_{len} {
     }
 
