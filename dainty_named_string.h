@@ -27,7 +27,6 @@
 #ifndef _DAINTY_NAMED_STRING_H_
 #define _DAINTY_NAMED_STRING_H_
 
-#include "dainty_named_ptr.h"
 #include "dainty_named_string_impl.h"
 
 namespace dainty
@@ -101,7 +100,7 @@ namespace string
     constexpr static
     t_n    get_capacity();
     t_n    get_count   (t_char) const;
-    P_cstr get_cstr    () const; // get_cstr()
+    P_cstr get_cstr    () const;
     t_n    get_length  () const;
     t_char get_front   () const;
     t_char get_back    () const;
@@ -191,7 +190,6 @@ namespace string
     template<class F> void ceach(F) const;
 
   private:
-    using t_ptr_ = ptr::t_ptr<t_char, t_string, ptr::t_deleter>;
     template<class, t_n_, class> friend class t_string;
     t_void maybe_adjust_  (t_n_);
     t_void maybe_readjust_(t_n_);
@@ -602,7 +600,7 @@ namespace string
   inline
   typename t_string<TAG, 0, I>::r_string
       t_string<TAG, 0, I>::operator=(t_string<TAG, 0, I1>&& str) {
-    dealloc_(store_.release_());
+    dealloc_(store_.release());
     max_       = reset(str.max_);
     blks_      = str.blks_;
     store_     = std::move(str.store_);

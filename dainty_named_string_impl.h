@@ -29,6 +29,7 @@
 
 #include <stdarg.h>
 #include "dainty_named.h"
+#include "dainty_named_ptr.h"
 
 namespace dainty
 {
@@ -60,7 +61,6 @@ namespace string
     t_block() = default;
     t_block(t_char _c, t_n _max) : c(_c), max(_max) { };
   };
-
   using R_block = named::t_prefix<t_block>::R_;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,6 +85,15 @@ namespace string
   t_n_   count_   (t_char,  P_cstr_);
   t_n_   length_  (P_cstr_);
   t_n_   length_  (P_cstr_, va_list);
+
+////////////////////////////////////////////////////////////////////////////////
+
+  struct t_del_ {
+    inline t_void operator()(p_cstr_ cstr) {
+      dealloc_(cstr);
+    }
+  };
+  using t_ptr_ = ptr::t_ptr<t_char, p_cstr_, t_del_>;
 
 ////////////////////////////////////////////////////////////////////////////////
 
