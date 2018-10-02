@@ -47,6 +47,7 @@ namespace string
   public:
     using t_n      = named::t_n;
     using P_cstr   = named::P_cstr;
+    using R_crange = t_prefix<t_crange>::R_;
     using r_string = typename t_prefix<t_string>::r_;
     using R_string = typename t_prefix<t_string>::R_;
     using t_char   = typename t_impl_::t_char;
@@ -55,6 +56,7 @@ namespace string
     t_string();
     t_string(P_cstr);
     t_string(R_block);
+    t_string(R_crange);
     t_string(t_fmt, P_cstr_, ...) __attribute__((format(printf, 3, 4)));
     t_string(R_string);
 
@@ -65,6 +67,7 @@ namespace string
 
     r_string operator=(P_cstr);
     r_string operator=(R_block);
+    r_string operator=(R_crange);
     r_string operator=(R_string);
     template<t_n_ N1>
     r_string operator=(const t_char (&)[N1]);
@@ -77,6 +80,7 @@ namespace string
 
     r_string append(P_cstr);
     r_string append(R_block);
+    r_string append(R_crange);
     r_string append(t_fmt, P_cstr_, ...) __attribute__((format(printf, 3, 4)));
     template<t_n_ N1>
     r_string append(const t_char (&)[N1]);
@@ -105,6 +109,10 @@ namespace string
     t_char get_front   () const;
     t_char get_back    () const;
 
+    t_crange mk_range()           const;
+    t_crange mk_range(t_ix)       const;
+    t_crange mk_range(t_ix, t_ix) const;
+
     template<class F> void  each(F);
     template<class F> void  each(F) const;
     template<class F> void ceach(F) const;
@@ -123,6 +131,7 @@ namespace string
   public:
     using t_n      = named::t_n;
     using P_cstr   = named::P_cstr;
+    using R_crange = t_prefix<t_crange>::R_;
     using r_string = typename t_prefix<t_string>::r_;
     using R_string = typename t_prefix<t_string>::R_;
     using t_char   = typename t_impl_::t_char;
@@ -131,6 +140,7 @@ namespace string
     t_string(t_n max = t_n{64}, t_n blks = t_n{1});
     t_string(P_cstr);
     t_string(R_block);
+    t_string(R_crange);
     t_string(t_fmt, P_cstr_, ...) __attribute__((format(printf, 3, 4)));
     t_string(R_string);
 
@@ -144,6 +154,7 @@ namespace string
 
     r_string operator=(P_cstr);
     r_string operator=(R_block);
+    r_string operator=(R_crange);
     r_string operator=(R_string);
     template<t_n_ N1>
     r_string operator=(const t_char (&)[N1]);
@@ -158,6 +169,7 @@ namespace string
 
     r_string append(P_cstr);
     r_string append(R_block);
+    r_string append(R_crange);
     r_string append(t_fmt, P_cstr_, ...) __attribute__((format(printf, 3, 4)));
     template<t_n_ N1>
     r_string append(const t_char (&)[N1]);
@@ -184,6 +196,10 @@ namespace string
     t_n    get_count   (t_char) const;
     t_char get_front   () const;
     t_char get_back    () const;
+
+    t_crange mk_range()           const;
+    t_crange mk_range(t_ix)       const;
+    t_crange mk_range(t_ix, t_ix) const;
 
     template<class F> void  each(F);
     template<class F> void  each(F) const;
@@ -215,6 +231,12 @@ namespace string
   template<class TAG, t_n_ N, class I>
   inline
   t_string<TAG, N, I>::t_string(R_block block) : impl_{store_, N+1, block} {
+  }
+
+  template<class TAG, t_n_ N, class I>
+  inline
+  t_string<TAG, N, I>::t_string(R_crange range)
+    : impl_{store_, N+1, range.item, get(range.n)} {
   }
 
   template<class TAG, t_n_ N, class I>
@@ -259,6 +281,14 @@ namespace string
   typename t_string<TAG, N, I>::r_string
       t_string<TAG, N, I>::operator=(R_block block) {
     impl_.assign(store_, N+1, block);
+    return *this;
+  }
+
+  template<class TAG, t_n_ N, class I>
+  inline
+  typename t_string<TAG, N, I>::r_string
+      t_string<TAG, N, I>::operator=(R_crange range) {
+    impl_.assign(store_, N+1, range.item, get(range.n));
     return *this;
   }
 
@@ -321,6 +351,14 @@ namespace string
   typename t_string<TAG, N, I>::r_string
       t_string<TAG, N, I>::append(R_block block) {
     impl_.append(store_, N+1, block);
+    return *this;
+  }
+
+  template<class TAG, t_n_ N, class I>
+  inline
+  typename t_string<TAG, N, I>::r_string
+      t_string<TAG, N, I>::append(R_crange range) {
+    impl_.append(store_, N+1, range.item, get(range.n));
     return *this;
   }
 
@@ -444,6 +482,24 @@ namespace string
   }
 
   template<class TAG, t_n_ N, class I>
+  inline
+  t_crange t_string<TAG, N, I>::mk_range() const {
+    return impl_.mk_range(store_, 0);
+  }
+
+  template<class TAG, t_n_ N, class I>
+  inline
+  t_crange t_string<TAG, N, I>::mk_range(t_ix begin) const {
+    return impl_.mk_range(store_, get(begin));
+  }
+
+  template<class TAG, t_n_ N, class I>
+  inline
+  t_crange t_string<TAG, N, I>::mk_range(t_ix begin, t_ix end) const {
+    return impl_.mk_range(store_, get(begin), get(end));
+  }
+
+  template<class TAG, t_n_ N, class I>
   template<class F>
   inline
   t_void t_string<TAG, N, I>::each(F f) {
@@ -485,6 +541,13 @@ namespace string
   t_string<TAG, 0, I>::t_string(R_block block)
     : blks_{0}, max_{calc_n_(get(block.max), blks_)}, store_{alloc_(max_)},
       impl_{store_.get(), max_, block} {
+  }
+
+  template<class TAG, class I>
+  inline
+  t_string<TAG, 0, I>::t_string(R_crange range)
+    : blks_{0}, max_{calc_n_(get(range.n), blks_)}, store_{alloc_(max_)},
+      impl_{store_.get(), max_, range.item, get(range.n)} {
   }
 
   template<class TAG, class I>
@@ -569,6 +632,15 @@ namespace string
   template<class TAG, class I>
   inline
   typename t_string<TAG, 0, I>::r_string
+      t_string<TAG, 0, I>::operator=(R_crange range) {
+    maybe_adjust_(get(range.n));
+    impl_.assign(store_.get(), max_, range.item, get(range.n));
+    return *this;
+  }
+
+  template<class TAG, class I>
+  inline
+  typename t_string<TAG, 0, I>::r_string
       t_string<TAG, 0, I>::operator=(R_string str) {
     maybe_adjust_(get(str.get_length()));
     impl_.assign(store_.get(), max_, get(str.get_cstr()));
@@ -644,6 +716,15 @@ namespace string
       t_string<TAG, 0, I>::append(R_block block) {
     maybe_readjust_(get(block.max));
     impl_.append(store_.get(), max_, block);
+    return *this;
+  }
+
+  template<class TAG, class I>
+  inline
+  typename t_string<TAG, 0, I>::r_string
+      t_string<TAG, 0, I>::append(R_crange range) {
+    maybe_readjust_(get(range.n));
+    impl_.append(store_.get(), max_, range.item, get(range.n));
     return *this;
   }
 
@@ -768,6 +849,24 @@ namespace string
   inline
   typename t_string<TAG, 0, I>::t_char t_string<TAG, 0, I>::get_back() const {
     return impl_.get_back(store_.get());
+  }
+
+  template<class TAG, class I>
+  inline
+  t_crange t_string<TAG, 0, I>::mk_range() const {
+    return impl_.mk_range(store_.get(), 0);
+  }
+
+  template<class TAG, class I>
+  inline
+  t_crange t_string<TAG, 0, I>::mk_range(t_ix begin) const {
+    return impl_.mk_range(store_.get(), get(begin));
+  }
+
+  template<class TAG, class I>
+  inline
+  t_crange t_string<TAG, 0, I>::mk_range(t_ix begin, t_ix end) const {
+    return impl_.mk_range(store_.get(), get(begin), get(end));
   }
 
   template<class TAG, class I>

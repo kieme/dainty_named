@@ -178,6 +178,11 @@ namespace string
     return *str ? (t_bool)l : !*pattern;
   }
 
+  t_crange mk_range_(P_cstr_ str, t_n_ len, t_ix_ begin, t_ix_ end) {
+    // XXX
+    return t_crange{str + begin, t_n{end - begin}};
+  }
+
   t_n_ count_(t_char c,  P_cstr_ str) {
     t_n_ cnt = 0;
     for (; *str; ++str)

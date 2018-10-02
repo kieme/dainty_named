@@ -29,6 +29,7 @@
 
 #include <stdarg.h>
 #include "dainty_named.h"
+#include "dainty_named_range.h"
 #include "dainty_named_ptr.h"
 
 namespace dainty
@@ -44,8 +45,13 @@ namespace string
   using named::P_cstr;
   using named::t_n_;
   using named::t_n;
+  using named::t_ix_;
+  using named::t_ix;
   using named::t_char;
   using named::t_int;
+
+  enum  t_crange_tag_ {};
+  using t_crange = range::t_crange<t_char, t_crange_tag_>;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -74,17 +80,19 @@ namespace string
   t_n_ fill_ (p_cstr_, t_n_, R_block,          t_overflow_assert);
   t_n_ fill_ (p_cstr_, t_n_, R_block,          t_overflow_truncate);
 
-  t_n_    calc_n_ (t_n_, t_n_);
-  p_cstr_ alloc_  (t_n_);
-  t_void  dealloc_(p_cstr_);
-  p_cstr_ realloc_(p_cstr_, t_n_);
+  t_crange mk_range_(P_cstr_, t_n_, t_ix_, t_ix_);
 
-  t_void display_ (P_cstr_);
-  t_int  compare_ (P_cstr_, P_cstr_);
-  t_bool match_   (P_cstr_, P_cstr_ pattern);
-  t_n_   count_   (t_char,  P_cstr_);
-  t_n_   length_  (P_cstr_);
-  t_n_   length_  (P_cstr_, va_list);
+  t_n_     calc_n_  (t_n_, t_n_);
+  p_cstr_  alloc_   (t_n_);
+  t_void   dealloc_ (p_cstr_);
+  p_cstr_  realloc_ (p_cstr_, t_n_);
+
+  t_void   display_ (P_cstr_);
+  t_int    compare_ (P_cstr_, P_cstr_);
+  t_bool   match_   (P_cstr_, P_cstr_ pattern);
+  t_n_     count_   (t_char,  P_cstr_);
+  t_n_     length_  (P_cstr_);
+  t_n_     length_  (P_cstr_, va_list);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -134,6 +142,11 @@ namespace string
     inline
     t_void assign(p_cstr_ str, t_n_ max, P_cstr_ src) {
       len_ = copy_(str, max, src, I());
+    }
+
+    inline
+    t_void assign(p_cstr_ str, t_n_ max, P_cstr_ src, t_n_ cnt) {
+      len_ = copy_(str, max, src, cnt, I());
     }
 
     inline
@@ -213,6 +226,16 @@ namespace string
     inline
     t_char get_back(P_cstr_ str) const {
       return len_ ? str[len_ - 1] : '\0';
+    }
+
+    inline
+    t_crange mk_range(P_cstr_ str, t_ix_ begin) const {
+      return mk_range_(str, len_, begin, len_);
+    }
+
+    inline
+    t_crange mk_range(P_cstr_ str, t_ix_ begin, t_ix_ end) const {
+      return mk_range_(str, len_, begin, end);
     }
 
     template<class F>
