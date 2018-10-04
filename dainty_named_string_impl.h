@@ -80,8 +80,6 @@ namespace string
   t_n_ fill_ (p_cstr_, t_n_, R_block,          t_overflow_assert);
   t_n_ fill_ (p_cstr_, t_n_, R_block,          t_overflow_truncate);
 
-  t_crange mk_range_(P_cstr_, t_n_, t_ix_, t_ix_);
-
   t_n_     calc_n_  (t_n_, t_n_);
   p_cstr_  alloc_   (t_n_);
   t_void   dealloc_ (p_cstr_);
@@ -209,6 +207,11 @@ namespace string
     }
 
     inline
+    t_n_ reset(t_n_ len = 0) {
+      return named::reset(len_, len);
+    }
+
+    inline
     t_n_ get_length() const {
       return len_;
     }
@@ -229,13 +232,20 @@ namespace string
     }
 
     inline
-    t_crange mk_range(P_cstr_ str, t_ix_ begin) const {
-      return mk_range_(str, len_, begin, len_);
+    t_crange mk_range(P_cstr_ str) const {
+      return t_crange{str, t_n{len_}};
     }
 
     inline
-    t_crange mk_range(P_cstr_ str, t_ix_ begin, t_ix_ end) const {
-      return mk_range_(str, len_, begin, end);
+    t_crange mk_range(P_cstr_ str, t_ix begin) const {
+      return range::mk_crange<t_crange_tag_>(t_crange{str, t_n{len_}},
+                                             begin, t_ix{len_});
+    }
+
+    inline
+    t_crange mk_range(P_cstr_ str, t_ix begin, t_ix end) const {
+      return range::mk_crange<t_crange_tag_>(t_crange{str, t_n{len_}},
+                                             begin, end);
     }
 
     template<class F>
@@ -252,6 +262,7 @@ namespace string
         f(str[n]);
     }
 
+  private:
     t_n_ len_ = 0;
   };
 

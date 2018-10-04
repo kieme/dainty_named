@@ -484,19 +484,19 @@ namespace string
   template<class TAG, t_n_ N, class I>
   inline
   t_crange t_string<TAG, N, I>::mk_range() const {
-    return impl_.mk_range(store_, 0);
+    return impl_.mk_range(store_);
   }
 
   template<class TAG, t_n_ N, class I>
   inline
   t_crange t_string<TAG, N, I>::mk_range(t_ix begin) const {
-    return impl_.mk_range(store_, get(begin));
+    return impl_.mk_range(store_, begin);
   }
 
   template<class TAG, t_n_ N, class I>
   inline
   t_crange t_string<TAG, N, I>::mk_range(t_ix begin, t_ix end) const {
-    return impl_.mk_range(store_, get(begin), get(end));
+    return impl_.mk_range(store_, begin, end);
   }
 
   template<class TAG, t_n_ N, class I>
@@ -586,8 +586,8 @@ namespace string
   template<class I1>
   inline
   t_string<TAG, 0, I>::t_string(t_string<TAG, 0, I1>&& str)
-    : blks_{str.blks_}, max_{reset(str.max_)}, store_{std::move(str.store_)},
-      impl_{reset(str.impl_.len_)} {
+    : blks_{str.blks_}, max_{named::reset(str.max_)},
+      store_{std::move(str.store_)}, impl_{str.impl_.reset()} {
   }
 
   template<class TAG, class I>
@@ -673,10 +673,10 @@ namespace string
   typename t_string<TAG, 0, I>::r_string
       t_string<TAG, 0, I>::operator=(t_string<TAG, 0, I1>&& str) {
     dealloc_(store_.release());
-    max_       = reset(str.max_);
-    blks_      = str.blks_;
-    store_     = std::move(str.store_);
-    impl_.len_ = reset(str.impl_.len_);
+    impl_.reset(str.impl_.reset());
+    max_   = named::reset(str.max_);
+    blks_  = str.blks_;
+    store_ = std::move(str.store_);
     return *this;
   }
 
@@ -854,19 +854,19 @@ namespace string
   template<class TAG, class I>
   inline
   t_crange t_string<TAG, 0, I>::mk_range() const {
-    return impl_.mk_range(store_.get(), 0);
+    return impl_.mk_range(store_.get());
   }
 
   template<class TAG, class I>
   inline
   t_crange t_string<TAG, 0, I>::mk_range(t_ix begin) const {
-    return impl_.mk_range(store_.get(), get(begin));
+    return impl_.mk_range(store_.get(), begin);
   }
 
   template<class TAG, class I>
   inline
   t_crange t_string<TAG, 0, I>::mk_range(t_ix begin, t_ix end) const {
-    return impl_.mk_range(store_.get(), get(begin), get(end));
+    return impl_.mk_range(store_.get(), begin, end);
   }
 
   template<class TAG, class I>
