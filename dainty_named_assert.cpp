@@ -24,8 +24,11 @@
 
 ******************************************************************************/
 
+#include <stdio.h>
+#include <execinfo.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <assert.h>
-#include <cstdio>
 #include "dainty_named_assert.h"
 
 namespace dainty
@@ -35,6 +38,13 @@ namespace named
   t_void assert_now(P_cstr reason) {
     printf("assert: %s\n", get(reason));
     fflush(stdout);
+
+    void* array[20];
+    auto size = backtrace(array, 20);
+
+    backtrace_symbols_fd(array, size, STDERR_FILENO);
+    fflush(stderr);
+
     assert(0);
   }
 }
