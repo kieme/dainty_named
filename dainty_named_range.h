@@ -58,6 +58,8 @@ namespace range
   public:
     using t_tag  = TAG;
     using t_item = T;
+    using r_item = typename t_prefix<T>::r_;
+    using R_item = typename t_prefix<T>::R_;
     using p_item = typename t_prefix<T>::p_;
 
     t_range(p_item, t_n);
@@ -66,6 +68,9 @@ namespace range
     t_range& operator=(const t_crange<T, TAG>&);
 
     operator t_validity() const;
+
+    r_item operator[](t_ix);
+    R_item operator[](t_ix) const;
 
     template<typename F> t_void  each(F);
     template<typename F> t_void  each(F) const;
@@ -80,12 +85,15 @@ namespace range
   public:
     using t_tag  = TAG;
     using t_item = T;
+    using R_item = typename t_prefix<T>::R_;
     using P_item = typename t_prefix<T>::P_;
 
     t_crange(P_item, t_n);
     t_crange(const t_range<T, TAG>&);
 
     operator t_validity() const;
+
+    R_item operator[](t_ix) const;
 
     template<typename F> t_void  each(F);
     template<typename F> t_void  each(F) const;
@@ -390,6 +398,24 @@ namespace range
 
   template<typename T, typename TAG>
   inline
+  typename t_range<T, TAG>::r_item t_range<T, TAG>::operator[](t_ix ix) {
+#ifdef DAINTY_NAMED_RANGE_CHECK
+    check_(item, get(n), get(ix));
+#endif
+    return item + get(ix);
+  }
+
+  template<typename T, typename TAG>
+  inline
+  typename t_range<T, TAG>::R_item t_range<T, TAG>::operator[](t_ix ix) const {
+#ifdef DAINTY_NAMED_RANGE_CHECK
+    check_(item, get(n), get(ix));
+#endif
+    return item + get(ix);
+  }
+
+  template<typename T, typename TAG>
+  inline
   t_range<T, TAG>::operator t_validity() const {
     return item ? VALID : INVALID;
   }
@@ -438,6 +464,16 @@ namespace range
   inline
   t_crange<T, TAG>::operator t_validity() const {
     return item ? VALID : INVALID;
+  }
+
+  template<typename T, typename TAG>
+  inline
+  typename t_crange<T, TAG>::R_item
+      t_crange<T, TAG>::operator[](t_ix ix) const {
+#ifdef DAINTY_NAMED_RANGE_CHECK
+    check_(item, get(n), get(ix));
+#endif
+    return item + get(ix);
   }
 
   template<typename T, typename TAG>
