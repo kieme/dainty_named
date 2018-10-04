@@ -106,6 +106,7 @@ namespace string
     t_n    get_count   (t_char) const;
     P_cstr get_cstr    () const;
     t_n    get_length  () const;
+    t_bool is_empty    () const;
     t_char get_front   () const;
     t_char get_back    () const;
 
@@ -193,6 +194,7 @@ namespace string
     P_cstr get_cstr    () const;
     t_n    get_length  () const;
     t_n    get_capacity() const;
+    t_bool is_empty    () const;
     t_n    get_count   (t_char) const;
     t_char get_front   () const;
     t_char get_back    () const;
@@ -461,6 +463,12 @@ namespace string
   constexpr
   t_n t_string<TAG, N, I>::get_capacity() {
     return t_n{N};
+  }
+
+  template<class TAG, t_n_ N, class I>
+  inline
+  t_bool t_string<TAG, N, I>::is_empty() const {
+    return impl_.is_empty();
   }
 
   template<class TAG, t_n_ N, class I>
@@ -831,6 +839,12 @@ namespace string
   inline
   t_n t_string<TAG, 0, I>::get_capacity() const {
     return t_n{max_ ? max_ - 1 : 0};
+  }
+
+  template<class TAG, class I>
+  inline
+  t_bool t_string<TAG, 0, I>::is_empty() const {
+    return impl_.is_empty();
   }
 
   template<class TAG, class I>

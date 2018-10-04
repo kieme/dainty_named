@@ -202,6 +202,11 @@ namespace string
     }
 
     inline
+    t_bool is_empty() const {
+      return len_ == 0;
+    }
+
+    inline
     P_cstr_ get_cstr(P_cstr_ str) const {
       return str;
     }
