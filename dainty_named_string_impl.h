@@ -49,9 +49,36 @@ namespace string
   using named::t_ix;
   using named::t_char;
   using named::t_int;
+  using named::t_int;
 
   enum  t_crange_tag_ {};
   using t_crange = range::t_crange<t_char, t_crange_tag_>;
+  using R_crange = t_prefix<t_crange>::R_;
+
+///////////////////////////////////////////////////////////////////////////////
+
+  template<t_n_ N>
+  inline t_crange mk_range(const t_char (&value)[N]) {
+    return t_crange{value, t_n{N-1}};
+  }
+
+  template<t_n_ N>
+  inline t_crange mk_range(const t_char (&value)[N], t_ix begin) {
+    return range::mk_crange<t_crange_tag_>(t_crange{value, t_n{N-1}}, begin);
+  }
+
+  template<t_n_ N>
+  inline t_crange mk_range(const t_char (&value)[N], t_ix begin, t_ix end) {
+    return range::mk_crange<t_crange_tag_>(t_crange{value, t_n{N-1}}, begin, end);
+  }
+
+  inline t_crange mk_range(R_crange range, t_ix begin) {
+    return range::mk_crange<t_crange_tag_>(range, begin);
+  }
+
+  inline t_crange mk_range(R_crange range, t_ix begin, t_ix end) {
+    return range::mk_crange<t_crange_tag_>(range, begin, end);
+  }
 
 ////////////////////////////////////////////////////////////////////////////////
 
