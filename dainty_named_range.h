@@ -80,8 +80,8 @@ namespace range
     template<typename F> t_void  each(F) const;
     template<typename F> t_void ceach(F) const;
 
-    p_item const item;
-    const t_n n;
+    p_item const ptr;
+    const t_n    n;
   };
 
   template<typename T, typename TAG>
@@ -105,7 +105,7 @@ namespace range
     template<typename F> t_void  each(F) const;
     template<typename F> t_void ceach(F) const;
 
-    P_item const item;
+    P_item const ptr;
     const t_n n;
   };
 
@@ -116,7 +116,7 @@ namespace range
   template<typename T, typename TAG>
   inline
   typename t_range<T, TAG>::p_item begin(t_range<T, TAG> range) {
-    return range.item;
+    return range.ptr;
   }
 
   template<typename T, typename TAG>
@@ -128,7 +128,7 @@ namespace range
   template<typename T, typename TAG>
   inline
   typename t_crange<T, TAG>::P_item cbegin(t_range<T, TAG> range) {
-    return range.item;
+    return range.ptr;
   }
 
   template<typename T, typename TAG>
@@ -142,7 +142,7 @@ namespace range
   template<typename T, typename TAG>
   inline
   typename t_crange<T, TAG>::P_item begin(t_crange<T, TAG> range) {
-    return range.item;
+    return range.ptr;
   }
 
   template<typename T, typename TAG>
@@ -154,7 +154,7 @@ namespace range
   template<typename T, typename TAG>
   inline
   typename t_crange<T, TAG>::P_item cbegin(t_crange<T, TAG> range) {
-    return range.item;
+    return range.ptr;
   }
 
   template<typename T, typename TAG>
@@ -169,10 +169,10 @@ namespace range
   inline
   t_bool operator==(t_crange<T, TAG> lh, t_crange<T, TAG> rh) {
     if (lh.n == rh.n) {
-      if (lh.item != rh.item) {
+      if (lh.ptr != rh.ptr) {
         t_n_ i = 0, n = get(lh.n);
         for (; i < n; ++i)
-          if (lh.item[i] != rh.item[i])
+          if (lh.ptr[i] != rh.ptr[i])
             break;
         return i == n;
       }
@@ -319,62 +319,62 @@ namespace range
   template<typename TAG1, typename TAG, typename T>
   inline
   t_range<T, TAG1> mk_range(t_range<T, TAG> range) {
-    return {range.item, range.n};
+    return {range.ptr, range.n};
   }
 
   template<typename TAG1, typename TAG, typename T>
   inline
   t_crange<T, TAG1> mk_crange(t_crange<T, TAG> range) {
-    return {range.item, range.n};
+    return {range.ptr, range.n};
   }
 
   template<typename TAG1, typename TAG, typename T>
   inline
   t_range<T, TAG1> mk_range(t_range<T, TAG> range, t_ix begin) {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(range.item, get(range.n), get(begin));
+    check_(range.ptr, get(range.n), get(begin));
 #endif
     const auto n = get(range.n) - get(begin);
-    return {range.item + get(begin), t_n{n}};
+    return {range.ptr + get(begin), t_n{n}};
   }
 
   template<typename TAG1, typename TAG, typename T>
   inline
   t_crange<T, TAG1> mk_crange(t_crange<T, TAG> range, t_ix begin) {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(range.item, get(range.n), get(begin));
+    check_(range.ptr, get(range.n), get(begin));
 #endif
     const auto n = get(range.n) - get(begin);
-    return {range.item + get(begin), t_n{n}};
+    return {range.ptr + get(begin), t_n{n}};
   }
 
   template<typename TAG1, typename TAG, typename T>
   inline
   t_range<T, TAG1> mk_range(t_range<T, TAG> range, t_ix begin, t_ix end) {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(range.item, get(range.n), get(begin), get(end));
+    check_(range.ptr, get(range.n), get(begin), get(end));
 #endif
     const auto n = get(end) - get(begin);
-    return {range.item + get(begin), t_n{n}};
+    return {range.ptr + get(begin), t_n{n}};
   }
 
   template<typename TAG1, typename TAG, typename T>
   inline
   t_crange<T, TAG1> mk_crange(t_crange<T, TAG> range, t_ix begin, t_ix end) {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(range.item, get(range.n), get(begin), get(end));
+    check_(range.ptr, get(range.n), get(begin), get(end));
 #endif
     const auto n = get(end) - get(begin);
-    return {range.item + get(begin), t_n{n}};
+    return {range.ptr + get(begin), t_n{n}};
   }
 
 ///////////////////////////////////////////////////////////////////////////////
 
   template<typename T, typename TAG>
   inline
-  t_range<T, TAG>::t_range(p_item _item, t_n _n) : item{_item}, n{_n} {
+  t_range<T, TAG>::t_range(p_item _ptr, t_n _n) : ptr{_ptr}, n{_n} {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(_item, named::get(n));
+    check_(ptr, named::get(n));
 #endif
   }
 
@@ -382,11 +382,11 @@ namespace range
   inline
   t_range<T, TAG>& t_range<T, TAG>::operator=(const t_range<T, TAG>& range) {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(item, named::get(n), range.item, named::get(range.n));
+    check_(ptr, named::get(n), range.ptr, named::get(range.n));
 #endif
     auto n = named::get(range.n);
     for (t_n_ i = 0; i < n; ++i)
-      item[i] = range.item[i];
+      ptr[i] = range.ptr[i];
     return *this;
   }
 
@@ -394,11 +394,11 @@ namespace range
   inline
   t_range<T, TAG>& t_range<T, TAG>::operator=(const t_crange<T, TAG>& range) {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(item, named::get(n), range.item, named::get(range.n));
+    check_(ptr, named::get(n), range.ptr, named::get(range.n));
 #endif
     auto n = named::get(range.n);
     for (t_n_ i = 0; i < n; ++i)
-      item[i] = range.item[i];
+      ptr[i] = range.ptr[i];
     return *this;
   }
 
@@ -406,42 +406,42 @@ namespace range
   inline
   typename t_range<T, TAG>::r_item t_range<T, TAG>::operator[](t_ix ix) {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(item, named::get(n), named::get(ix));
+    check_(ptr, named::get(n), named::get(ix));
 #endif
-    return item[named::get(ix)];
+    return ptr[named::get(ix)];
   }
 
   template<typename T, typename TAG>
   inline
   typename t_range<T, TAG>::R_item t_range<T, TAG>::operator[](t_ix ix) const {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(item, named::get(n), named::get(ix));
+    check_(ptr, named::get(n), named::get(ix));
 #endif
-    return item[named::get(ix)];
+    return ptr[named::get(ix)];
   }
 
   template<typename T, typename TAG>
   inline
   typename t_range<T, TAG>::p_item t_range<T, TAG>::get(t_ix ix) {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(item, named::get(n), named::get(ix));
+    check_(ptr, named::get(n), named::get(ix));
 #endif
-    return item + named::get(ix);
+    return ptr + named::get(ix);
   }
 
   template<typename T, typename TAG>
   inline
   typename t_range<T, TAG>::P_item t_range<T, TAG>::get(t_ix ix) const {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(item, named::get(n), named::get(ix));
+    check_(ptr, named::get(n), named::get(ix));
 #endif
-    return item + named::get(ix);
+    return ptr + named::get(ix);
   }
 
   template<typename T, typename TAG>
   inline
   t_range<T, TAG>::operator t_validity() const {
-    return item ? VALID : INVALID;
+    return ptr ? VALID : INVALID;
   }
 
   template<typename T, typename TAG>
@@ -473,21 +473,21 @@ namespace range
   template<typename T, typename TAG>
   inline
   t_crange<T, TAG>::t_crange(const t_range<T, TAG>& range)
-    : item{range.item}, n{range.n} {
+    : ptr{range.ptr}, n{range.n} {
   }
 
   template<typename T, typename TAG>
   inline
-  t_crange<T, TAG>::t_crange(P_item _item, t_n _n) : item{_item}, n{_n} {
+  t_crange<T, TAG>::t_crange(P_item _ptr, t_n _n) : ptr{_ptr}, n{_n} {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(_item, named::get(n));
+    check_(_ptr, named::get(n));
 #endif
   }
 
   template<typename T, typename TAG>
   inline
   t_crange<T, TAG>::operator t_validity() const {
-    return item ? VALID : INVALID;
+    return ptr ? VALID : INVALID;
   }
 
   template<typename T, typename TAG>
@@ -495,18 +495,18 @@ namespace range
   typename t_crange<T, TAG>::R_item
       t_crange<T, TAG>::operator[](t_ix ix) const {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(item, named::get(n), named::get(ix));
+    check_(ptr, named::get(n), named::get(ix));
 #endif
-    return item[named::get(ix)];
+    return ptr[named::get(ix)];
   }
 
   template<typename T, typename TAG>
   inline
   typename t_crange<T, TAG>::P_item t_crange<T, TAG>::get(t_ix ix) const {
 #ifdef DAINTY_NAMED_RANGE_CHECK
-    check_(item, named::get(n), named::get(ix));
+    check_(ptr, named::get(n), named::get(ix));
 #endif
-    return item + named::get(ix);
+    return ptr + named::get(ix);
   }
 
   template<typename T, typename TAG>

@@ -238,7 +238,7 @@ namespace string
   template<class TAG, t_n_ N, class I>
   inline
   t_string<TAG, N, I>::t_string(R_crange range)
-    : impl_{store_, N+1, range.item, get(range.n)} {
+    : impl_{store_, N+1, begin(range), get(range.n)} {
   }
 
   template<class TAG, t_n_ N, class I>
@@ -290,7 +290,7 @@ namespace string
   inline
   typename t_string<TAG, N, I>::r_string
       t_string<TAG, N, I>::operator=(R_crange range) {
-    impl_.assign(store_, N+1, range.item, get(range.n));
+    impl_.assign(store_, N+1, begin(range), get(range.n));
     return *this;
   }
 
@@ -360,7 +360,7 @@ namespace string
   inline
   typename t_string<TAG, N, I>::r_string
       t_string<TAG, N, I>::append(R_crange range) {
-    impl_.append(store_, N+1, range.item, get(range.n));
+    impl_.append(store_, N+1, begin(range), get(range.n));
     return *this;
   }
 
@@ -555,7 +555,7 @@ namespace string
   inline
   t_string<TAG, 0, I>::t_string(R_crange range)
     : blks_{0}, max_{calc_n_(get(range.n), blks_)}, store_{alloc_(max_)},
-      impl_{store_.get(), max_, range.item, get(range.n)} {
+      impl_{store_.get(), max_, begin(range), get(range.n)} {
   }
 
   template<class TAG, class I>
@@ -642,7 +642,7 @@ namespace string
   typename t_string<TAG, 0, I>::r_string
       t_string<TAG, 0, I>::operator=(R_crange range) {
     maybe_adjust_(get(range.n));
-    impl_.assign(store_.get(), max_, range.item, get(range.n));
+    impl_.assign(store_.get(), max_, begin(range), get(range.n));
     return *this;
   }
 
@@ -732,7 +732,7 @@ namespace string
   typename t_string<TAG, 0, I>::r_string
       t_string<TAG, 0, I>::append(R_crange range) {
     maybe_readjust_(get(range.n));
-    impl_.append(store_.get(), max_, range.item, get(range.n));
+    impl_.append(store_.get(), max_, begin(range), get(range.n));
     return *this;
   }
 
