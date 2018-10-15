@@ -31,6 +31,7 @@
 #include "dainty_named.h"
 #include "dainty_named_range.h"
 #include "dainty_named_ptr.h"
+#include "dainty_named_assert.h"
 
 namespace dainty
 {
@@ -292,6 +293,14 @@ namespace string
     t_void each(P_cstr_ str, F f) const {
       for (t_n_ n = 0; n < len_; ++n)
         f(str[n]);
+    }
+
+    inline
+    t_void mod_(p_cstr_ str, t_ix_ pos, t_char ch) {
+      if (pos < len_)
+        str[pos] = ch;
+      else
+        assert_now(P_cstr{"not in range"});
     }
 
   private:

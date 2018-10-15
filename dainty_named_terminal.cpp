@@ -40,8 +40,29 @@ namespace terminal
   }
 
   t_out::~t_out() {
-    if (!is_empty())
+    if (!is_empty()) {
+      if (get_back() != '\n') {
+        if (get_length() == get_capacity())
+          mod_(t_ix{get(get_length()) - 1}, '\n');
+        else
+          append("\n");
+      }
       display();
+    }
+  }
+
+  r_out_string operator+=(r_out_string out, t_flush) {
+    if (!out.is_empty()) {
+      if (out.get_back() != '\n') {
+        if (out.get_length() == out.get_capacity())
+          out.mod_(t_ix{get(out.get_length()) - 1}, '\n');
+        else
+          out.append("\n");
+      }
+      out.display();
+      out.clear();
+    }
+    return out;
   }
 }
 }

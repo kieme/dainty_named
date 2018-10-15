@@ -119,6 +119,8 @@ namespace string
     template<class F> void  each(F) const;
     template<class F> void ceach(F) const;
 
+    t_void mod_(t_ix pos, t_char);
+
   private:
     template<class, t_n_, class> friend class t_string;
     t_char  store_[N+1];
@@ -207,6 +209,8 @@ namespace string
     template<class F> void  each(F);
     template<class F> void  each(F) const;
     template<class F> void ceach(F) const;
+
+    t_void mod_(t_ix pos, t_char);
 
   private:
     template<class, t_n_, class> friend class t_string;
@@ -527,6 +531,12 @@ namespace string
   inline
   t_void t_string<TAG, N, I>::ceach(F f) const {
     impl_.each(store_, f);
+  }
+
+  template<class TAG, t_n_ N, class I>
+  inline
+  t_void t_string<TAG, N, I>::mod_(t_ix pos, t_char ch) {
+    impl_.mod_(store_, get(pos), ch);
   }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -903,6 +913,12 @@ namespace string
   inline
   t_void t_string<TAG, 0, I>::ceach(F f) const {
     impl_.each(store_.get(), f);
+  }
+
+  template<class TAG, class I>
+  inline
+  t_void t_string<TAG, 0, I>::mod_(t_ix pos, t_char ch) {
+    impl_.mod_(store_, get(pos), ch);
   }
 
 ///////////////////////////////////////////////////////////////////////////////

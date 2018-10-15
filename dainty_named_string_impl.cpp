@@ -141,7 +141,7 @@ namespace string
   }
 
   t_void display_(P_cstr_ str) {
-    std::printf("%s\n", str);
+    std::printf("%s", str);
   }
 
   t_int compare_(P_cstr_ lh, P_cstr_ rh) {

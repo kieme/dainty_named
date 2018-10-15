@@ -44,6 +44,7 @@ namespace terminal
 
   enum  t_out_tag_ { };
   using t_out_string = t_string<t_out_tag_, 80, t_overflow_truncate>;
+  using r_out_string = t_prefix<t_out_string>::r_;
 
   class t_out : public t_out_string {
   public:
@@ -55,26 +56,20 @@ namespace terminal
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  inline t_out_string& operator+=(t_out_string& out, t_flush) {
-    if (!out.is_empty()) {
-      out.display();
-      out.clear();
-    }
-    return out;
-  }
+  r_out_string operator+=(r_out_string out, t_flush);
 
-  inline t_out_string& operator,(t_out_string& out, t_flush) {
+  inline r_out_string operator,(r_out_string out, t_flush) {
     return (out += FLUSH);
   }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  inline t_out_string& operator+=(t_out_string& out, t_clear) {
+  inline r_out_string operator+=(r_out_string out, t_clear) {
     out.clear();
     return out;
   }
 
-  inline t_out_string& operator,(t_out_string& out, t_clear) {
+  inline r_out_string operator,(r_out_string out, t_clear) {
     return (out += CLEAR);
   }
 
