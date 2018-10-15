@@ -27,6 +27,7 @@
 #ifndef _DAINTY_NAMED_STRING_H_
 #define _DAINTY_NAMED_STRING_H_
 
+#include <utility>
 #include "dainty_named_string_impl.h"
 
 namespace dainty
